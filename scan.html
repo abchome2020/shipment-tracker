@@ -7,45 +7,49 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap');
 :root {
-  --bg: #0f1117; --surface: #1a1d27; --border: #2a2d3a;
-  --accent: #00e5a0; --accent2: #005f43; --danger: #ff4f4f;
-  --text: #f0f2f5; --muted: #6b7280;
+  --bg: #f5f0eb;
+  --surface: #ffffff;
+  --border: #e0d6cc;
+  --accent: #b5956a;
+  --accent2: #f0e6d8;
+  --accent3: #8a6d4e;
+  --danger: #c0544f;
+  --text: #3a2e24;
+  --muted: #9c8878;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', sans-serif; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
-.header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 8px rgba(181,149,106,0.08); }
 .header-title { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; }
-.station-badge { background: var(--accent2); color: var(--accent); font-size: 11px; font-family: 'Space Mono', monospace; padding: 4px 10px; border-radius: 20px; }
+.station-badge { background: var(--accent2); color: var(--accent3); font-size: 11px; font-family: 'Space Mono', monospace; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); }
 .main { flex: 1; padding: 24px 20px; display: flex; flex-direction: column; gap: 20px; max-width: 480px; margin: 0 auto; width: 100%; }
-.status-bar { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+.status-bar { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 1px 4px rgba(181,149,106,0.08); }
 .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); transition: background 0.3s; flex-shrink: 0; }
-.status-dot.active { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
-.status-dot.error { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+.status-dot.active { background: var(--accent); box-shadow: 0 0 8px rgba(181,149,106,0.5); }
+.status-dot.error { background: var(--danger); box-shadow: 0 0 8px rgba(192,84,79,0.4); }
 .status-text { font-size: 13px; color: var(--muted); font-family: 'Space Mono', monospace; }
-.status-text.active { color: var(--accent); }
+.status-text.active { color: var(--accent3); }
 .status-text.error { color: var(--danger); }
 
-/* Steps progress */
 .steps-bar { display: flex; gap: 8px; }
 .step-pill { flex: 1; padding: 8px 4px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; text-align: center; font-size: 11px; font-family: 'Space Mono', monospace; color: var(--muted); transition: all 0.3s; }
-.step-pill.active { border-color: var(--accent); color: var(--accent); background: rgba(0,229,160,0.05); }
-.step-pill.done { border-color: var(--accent2); color: var(--accent); background: rgba(0,229,160,0.08); }
+.step-pill.active { border-color: var(--accent); color: var(--accent3); background: var(--accent2); }
+.step-pill.done { border-color: var(--accent); color: var(--accent); background: var(--accent2); }
 .step-pill.done::before { content: '✓ '; }
 
-.section { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; opacity: 0.4; pointer-events: none; transition: opacity 0.3s; }
+.section { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; opacity: 0.45; pointer-events: none; transition: opacity 0.3s; box-shadow: 0 1px 6px rgba(181,149,106,0.07); }
 .section.enabled { opacity: 1; pointer-events: all; }
-.section-label { padding: 14px 18px 10px; font-size: 11px; font-family: 'Space Mono', monospace; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+.section-label { padding: 14px 18px 10px; font-size: 11px; font-family: 'Space Mono', monospace; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid var(--border); background: #faf7f4; }
 .section-area { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
 
-/* Scan */
-.scan-btn { width: 100%; padding: 20px; background: transparent; border: 2px dashed var(--border); border-radius: 12px; color: var(--text); font-family: 'Noto Sans TC', sans-serif; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; -webkit-tap-highlight-color: transparent; }
-.scan-btn:active { border-color: var(--accent); background: rgba(0,229,160,0.05); }
+.scan-btn { width: 100%; padding: 20px; background: transparent; border: 2px dashed var(--border); border-radius: 12px; color: var(--text); font-family: 'Noto Sans TC', sans-serif; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; -webkit-tap-highlight-color: transparent; transition: all 0.2s; }
+.scan-btn:active { border-color: var(--accent); background: var(--accent2); }
 .scan-icon { width: 28px; height: 28px; color: var(--accent); }
 #qr-reader { width: 100%; border-radius: 10px; overflow: hidden; display: none; }
 #qr-reader video { width: 100% !important; border-radius: 10px; }
-.result-box { background: rgba(0,229,160,0.05); border: 1px solid var(--accent2); border-radius: 10px; padding: 14px 16px; display: none; }
+.result-box { background: var(--accent2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; display: none; }
 .result-box.show { display: block; }
-.result-label { font-size: 10px; font-family: 'Space Mono', monospace; color: var(--accent); letter-spacing: 2px; margin-bottom: 6px; }
+.result-label { font-size: 10px; font-family: 'Space Mono', monospace; color: var(--accent3); letter-spacing: 2px; margin-bottom: 6px; }
 .result-value { font-family: 'Space Mono', monospace; font-size: 16px; color: var(--text); word-break: break-all; font-weight: 700; }
 .result-time { font-size: 11px; color: var(--muted); margin-top: 4px; font-family: 'Space Mono', monospace; }
 .manual-toggle { text-align: center; font-size: 12px; color: var(--muted); cursor: pointer; text-decoration: underline; -webkit-tap-highlight-color: transparent; }
@@ -54,31 +58,31 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
 .text-input { width: 100%; padding: 14px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'Space Mono', monospace; font-size: 15px; outline: none; transition: border-color 0.2s; }
 .text-input:focus { border-color: var(--accent); }
 .text-input::placeholder { color: var(--muted); }
-.confirm-btn { padding: 14px; background: var(--accent2); border: 1px solid var(--accent); border-radius: 10px; color: var(--accent); font-family: 'Space Mono', monospace; font-size: 13px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.confirm-btn { padding: 14px; background: var(--accent2); border: 1px solid var(--accent); border-radius: 10px; color: var(--accent3); font-family: 'Space Mono', monospace; font-size: 13px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.confirm-btn:active { opacity: 0.7; }
 
-/* Photo blocks */
-.camera-btn { width: 100%; padding: 22px 20px; background: var(--accent); border: none; border-radius: 12px; color: #000; font-family: 'Noto Sans TC', sans-serif; font-size: 17px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; -webkit-tap-highlight-color: transparent; }
-.camera-btn:active { transform: scale(0.97); background: #00c88a; }
+.camera-btn { width: 100%; padding: 22px 20px; background: var(--accent); border: none; border-radius: 12px; color: #fff; font-family: 'Noto Sans TC', sans-serif; font-size: 17px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; -webkit-tap-highlight-color: transparent; transition: all 0.15s; }
+.camera-btn:active { transform: scale(0.97); background: var(--accent3); }
 .camera-btn svg { width: 26px; height: 26px; }
+
 .preview-wrap { display: none; flex-direction: column; gap: 10px; }
 .preview-wrap.show { display: flex; }
 .preview-img { width: 100%; border-radius: 10px; border: 1px solid var(--border); max-height: 200px; object-fit: cover; }
-.preview-actions { display: flex; gap: 10px; }
-.retake-btn { flex: 1; padding: 12px; background: transparent; border: 1px solid var(--border); border-radius: 10px; color: var(--muted); font-family: 'Noto Sans TC', sans-serif; font-size: 14px; cursor: pointer; }
-.next-btn { flex: 2; padding: 12px; background: var(--accent); border: none; border-radius: 10px; color: #000; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; opacity: 0.4; }
-.next-btn.ready { opacity: 1; }
+.photo-done-hint { text-align: center; font-size: 12px; color: var(--accent3); font-family: 'Space Mono', monospace; padding: 4px 0; }
+.retake-btn { width: 100%; padding: 12px; background: transparent; border: 1px solid var(--border); border-radius: 10px; color: var(--muted); font-family: 'Noto Sans TC', sans-serif; font-size: 14px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.retake-btn:active { opacity: 0.6; }
 
-/* Upload all */
-.upload-all-btn { width: 100%; padding: 20px; background: var(--accent); border: none; border-radius: 12px; color: #000; font-family: 'Noto Sans TC', sans-serif; font-size: 18px; font-weight: 900; cursor: pointer; -webkit-tap-highlight-color: transparent; display: none; }
+.upload-all-btn { width: 100%; padding: 20px; background: var(--accent); border: none; border-radius: 12px; color: #fff; font-family: 'Noto Sans TC', sans-serif; font-size: 18px; font-weight: 900; cursor: pointer; -webkit-tap-highlight-color: transparent; display: none; box-shadow: 0 4px 16px rgba(181,149,106,0.3); }
 .upload-all-btn.show { display: block; }
-.upload-all-btn:active { opacity: 0.8; }
+.upload-all-btn:active { opacity: 0.85; }
 
-.success-banner { display: none; padding: 16px 18px; background: rgba(0,229,160,0.1); border: 1px solid var(--accent); border-radius: 12px; text-align: center; flex-direction: column; gap: 4px; }
+.success-banner { display: none; padding: 16px 18px; background: var(--accent2); border: 1px solid var(--accent); border-radius: 12px; text-align: center; flex-direction: column; gap: 4px; }
 .success-banner.show { display: flex; }
-.success-title { font-size: 15px; font-weight: 700; color: var(--accent); }
+.success-title { font-size: 15px; font-weight: 700; color: var(--accent3); }
 .success-sub { font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; }
 .reset-btn { width: 100%; padding: 16px; background: transparent; border: 1px solid var(--border); border-radius: 12px; color: var(--muted); font-family: 'Noto Sans TC', sans-serif; font-size: 14px; cursor: pointer; display: none; }
 .reset-btn.show { display: block; }
+.reset-btn:active { opacity: 0.6; }
 .timestamp { text-align: center; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); padding-bottom: 20px; }
 </style>
 </head>
@@ -94,7 +98,6 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
     <span class="status-text" id="status-text">等待掃描寄件編號</span>
   </div>
 
-  <!-- Steps -->
   <div class="steps-bar">
     <div class="step-pill" id="step1">① 掃碼</div>
     <div class="step-pill" id="step2">② 內容物</div>
@@ -102,7 +105,6 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
     <div class="step-pill" id="step4">④ 包裝</div>
   </div>
 
-  <!-- Step 1: Scan -->
   <div class="section enabled" id="sec-scan">
     <div class="section-label">① 掃描寄件編號（明細單右上）</div>
     <div class="section-area">
@@ -126,7 +128,6 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
     </div>
   </div>
 
-  <!-- Step 2: 內容物照片 -->
   <div class="section" id="sec-photo1">
     <div class="section-label">② 拍攝內容物照片</div>
     <div class="section-area">
@@ -136,16 +137,13 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
       </button>
       <input type="file" id="photo1-input" accept="image/*" capture="environment" onchange="handlePhoto(event,'photo1')">
       <div class="preview-wrap" id="photo1-preview">
-        <img class="preview-img" id="photo1-img" src="" alt="內容物預覽">
-        <div class="preview-actions">
-          <button class="retake-btn" onclick="retakePhoto('photo1')">重拍</button>
-          <button class="next-btn" id="photo1-next" onclick="confirmPhoto('photo1')">確認，下一步 →</button>
-        </div>
+        <img class="preview-img" id="photo1-img" src="" alt="內容物">
+        <div class="photo-done-hint">✓ 已拍攝，請繼續下方步驟</div>
+        <button class="retake-btn" onclick="retakePhoto('photo1')">重拍</button>
       </div>
     </div>
   </div>
 
-  <!-- Step 3: 物流單照片 -->
   <div class="section" id="sec-photo2">
     <div class="section-label">③ 拍攝物流單照片</div>
     <div class="section-area">
@@ -155,16 +153,13 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
       </button>
       <input type="file" id="photo2-input" accept="image/*" capture="environment" onchange="handlePhoto(event,'photo2')">
       <div class="preview-wrap" id="photo2-preview">
-        <img class="preview-img" id="photo2-img" src="" alt="物流單預覽">
-        <div class="preview-actions">
-          <button class="retake-btn" onclick="retakePhoto('photo2')">重拍</button>
-          <button class="next-btn" id="photo2-next" onclick="confirmPhoto('photo2')">確認，下一步 →</button>
-        </div>
+        <img class="preview-img" id="photo2-img" src="" alt="物流單">
+        <div class="photo-done-hint">✓ 已拍攝，請繼續下方步驟</div>
+        <button class="retake-btn" onclick="retakePhoto('photo2')">重拍</button>
       </div>
     </div>
   </div>
 
-  <!-- Step 4: 包裝完成照片 -->
   <div class="section" id="sec-photo3">
     <div class="section-label">④ 拍攝包裝完成照片</div>
     <div class="section-area">
@@ -174,16 +169,13 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
       </button>
       <input type="file" id="photo3-input" accept="image/*" capture="environment" onchange="handlePhoto(event,'photo3')">
       <div class="preview-wrap" id="photo3-preview">
-        <img class="preview-img" id="photo3-img" src="" alt="包裝預覽">
-        <div class="preview-actions">
-          <button class="retake-btn" onclick="retakePhoto('photo3')">重拍</button>
-          <button class="next-btn" id="photo3-next" onclick="confirmPhoto('photo3')">確認完成 ✓</button>
-        </div>
+        <img class="preview-img" id="photo3-img" src="" alt="包裝完成">
+        <div class="photo-done-hint">✓ 已拍攝，請點上傳</div>
+        <button class="retake-btn" onclick="retakePhoto('photo3')">重拍</button>
       </div>
     </div>
   </div>
 
-  <!-- Upload -->
   <button class="upload-all-btn" id="upload-all-btn" onclick="uploadAll()">⬆ 上傳儲存（開發中）</button>
 
   <div class="success-banner" id="success-banner">
@@ -198,7 +190,6 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
 <script>
 let currentCode = null, currentTime = null;
 let photos = { photo1: null, photo2: null, photo3: null };
-let photosDone = { photo1: false, photo2: false, photo3: false };
 let html5QrcodeScanner = null, scanning = false;
 
 function updateClock() {
@@ -220,7 +211,7 @@ function setStatus(type, msg) {
 }
 
 function setStep(n) {
-  ['step1','step2','step3','step4'].forEach((id, i) => {
+  ['step1','step2','step3','step4'].forEach((id,i) => {
     const el = document.getElementById(id);
     if (i+1 < n) el.className = 'step-pill done';
     else if (i+1 === n) el.className = 'step-pill active';
@@ -238,10 +229,8 @@ function startScan() {
   html5QrcodeScanner.start(
     { facingMode: "environment" },
     { fps: 10, qrbox: { width: 250, height: 120 } },
-    (decodedText) => {
-      let code = decodedText.trim().replace(/-/g, '');
-      stopScan(); setCode(code);
-    }, () => {}
+    (decodedText) => { stopScan(); setCode(decodedText.trim().replace(/-/g,'')); },
+    () => {}
   ).catch(() => {
     setStatus('error', '無法開啟相機，請手動輸入');
     scanning = false;
@@ -253,9 +242,8 @@ function startScan() {
 
 function stopScan() {
   if (html5QrcodeScanner) {
-    html5QrcodeScanner.stop().then(() => {
-      document.getElementById('qr-reader').style.display = 'none'; scanning = false;
-    }).catch(() => { document.getElementById('qr-reader').style.display = 'none'; scanning = false; });
+    html5QrcodeScanner.stop().then(() => { document.getElementById('qr-reader').style.display = 'none'; scanning = false; })
+    .catch(() => { document.getElementById('qr-reader').style.display = 'none'; scanning = false; });
   }
 }
 
@@ -268,6 +256,7 @@ function setCode(code) {
   document.getElementById('sec-photo1').className = 'section enabled';
   setStatus('active', '請拍攝內容物照片');
   setStep(2);
+  setTimeout(() => document.getElementById('sec-photo1').scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
 }
 
 function toggleManual() {
@@ -293,44 +282,58 @@ function handlePhoto(event, key) {
   reader.onload = (e) => {
     document.getElementById(key+'-img').src = e.target.result;
     document.getElementById(key+'-preview').className = 'preview-wrap show';
-    document.getElementById(key+'-next').className = 'next-btn ready';
+    if (key === 'photo1') {
+      document.getElementById('sec-photo2').className = 'section enabled';
+      setStatus('active', '請拍攝物流單照片');
+      setStep(3);
+      setTimeout(() => document.getElementById('sec-photo2').scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+    } else if (key === 'photo2') {
+      document.getElementById('sec-photo3').className = 'section enabled';
+      setStatus('active', '請拍攝包裝完成照片');
+      setStep(4);
+      setTimeout(() => document.getElementById('sec-photo3').scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+    } else if (key === 'photo3') {
+      document.getElementById('upload-all-btn').className = 'upload-all-btn show';
+      setStatus('active', '三張照片完成，請上傳');
+      setTimeout(() => document.getElementById('upload-all-btn').scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+    }
   };
   reader.readAsDataURL(file);
 }
 
 function retakePhoto(key) {
   photos[key] = null;
-  photosDone[key] = false;
   document.getElementById(key+'-input').value = '';
   document.getElementById(key+'-preview').className = 'preview-wrap';
   document.getElementById(key+'-img').src = '';
-  document.getElementById(key+'-next').className = 'next-btn';
-}
-
-function confirmPhoto(key) {
-  if (!photos[key]) return;
-  photosDone[key] = true;
   if (key === 'photo1') {
-    document.getElementById('sec-photo2').className = 'section enabled';
-    setStatus('active', '請拍攝物流單照片');
-    setStep(3);
-    document.getElementById('sec-photo2').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('sec-photo2').className = 'section';
+    document.getElementById('sec-photo3').className = 'section';
+    document.getElementById('upload-all-btn').className = 'upload-all-btn';
+    photos.photo2 = null; photos.photo3 = null;
+    ['photo2','photo3'].forEach(k => {
+      document.getElementById(k+'-input').value = '';
+      document.getElementById(k+'-preview').className = 'preview-wrap';
+      document.getElementById(k+'-img').src = '';
+    });
+    setStatus('active', '請重新拍攝內容物照片'); setStep(2);
   } else if (key === 'photo2') {
-    document.getElementById('sec-photo3').className = 'section enabled';
-    setStatus('active', '請拍攝包裝完成照片');
-    setStep(4);
-    document.getElementById('sec-photo3').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('sec-photo3').className = 'section';
+    document.getElementById('upload-all-btn').className = 'upload-all-btn';
+    photos.photo3 = null;
+    document.getElementById('photo3-input').value = '';
+    document.getElementById('photo3-preview').className = 'preview-wrap';
+    document.getElementById('photo3-img').src = '';
+    setStatus('active', '請重新拍攝物流單照片'); setStep(3);
   } else if (key === 'photo3') {
-    document.getElementById('upload-all-btn').className = 'upload-all-btn show';
-    setStatus('active', '三張照片已完成，請上傳');
-    document.getElementById('upload-all-btn').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('upload-all-btn').className = 'upload-all-btn';
+    setStatus('active', '請重新拍攝包裝完成照片'); setStep(4);
   }
 }
 
 function uploadAll() {
   if (!photos.photo1 || !photos.photo2 || !photos.photo3 || !currentCode) return;
   setStatus('active', '上傳中...');
-  // TODO: 上傳至 Google Drive，寫入 Google Sheets
   setTimeout(() => {
     document.getElementById('success-banner').className = 'success-banner show';
     document.getElementById('success-info').textContent = `${currentCode} · ${formatDateTime(currentTime)}`;
@@ -343,7 +346,6 @@ function uploadAll() {
 function resetAll() {
   currentCode = null; currentTime = null;
   photos = { photo1: null, photo2: null, photo3: null };
-  photosDone = { photo1: false, photo2: false, photo3: false };
   scanning = false;
   document.getElementById('scan-btn').style.display = 'flex';
   document.getElementById('qr-reader').style.display = 'none';
@@ -356,7 +358,6 @@ function resetAll() {
     document.getElementById(k+'-input').value = '';
     document.getElementById(k+'-preview').className = 'preview-wrap';
     document.getElementById(k+'-img').src = '';
-    document.getElementById(k+'-next').className = 'next-btn';
   });
   document.getElementById('sec-photo1').className = 'section';
   document.getElementById('sec-photo2').className = 'section';
