@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>包裹查詢系統</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  --bg: #0a0c12;
+  --surface: #12151f;
+  --surface2: #1a1e2d;
+  --border: #232738;
+  --accent: #00e5a0;
+  --accent2: #003d2b;
+  --warn: #f5a623;
+  --text: #e8eaf0;
+  --muted: #5a6072;
+  --muted2: #3a3f52;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans TC', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 18px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo { display: flex; align-items: center; gap: 14px; }
+.logo-icon {
+  width: 36px; height: 36px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.logo-text { font-family: 'Space Mono', monospace; font-size: 14px; color: var(--accent); letter-spacing: 2px; }
+.logo-sub { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; margin-top: 2px; }
+.header-clock { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--muted); }
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  width: 100%;
+  flex: 1;
+}
+
+.search-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px;
+  margin-bottom: 32px;
+}
+.search-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+.search-desc { font-size: 13px; color: var(--muted); margin-bottom: 24px; font-family: 'Space Mono', monospace; }
+.search-row { display: flex; gap: 12px; }
+.search-input {
+  flex: 1;
+  padding: 16px 20px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+  letter-spacing: 1px;
+}
+.search-input:focus { border-color: var(--accent); }
+.search-input::placeholder { color: var(--muted); letter-spacing: 0; font-size: 14px; }
+.search-button {
+  padding: 16px 32px;
+  background: var(--accent);
+  border: none;
+  border-radius: 12px;
+  color: #000;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.search-button:hover { background: #00c88a; }
+.search-button:active { transform: scale(0.98); }
+
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.section-title { font-size: 13px; font-family: 'Space Mono', monospace; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+.record-count { font-size: 12px; font-family: 'Space Mono', monospace; color: var(--muted); }
+
+.result-area { display: none; }
+.result-area.show { display: block; }
+
+.result-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+.result-card.found { border-color: var(--accent); }
+.result-card.not-found { border-color: var(--muted2); }
+
+.result-header {
+  padding: 20px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.result-status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.result-status-dot.found { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+.result-status-dot.not-found { background: var(--muted); }
+.result-header-title { font-size: 13px; font-family: 'Space Mono', monospace; color: var(--muted); letter-spacing: 1px; }
+.result-header-code { font-family: 'Space Mono', monospace; font-size: 20px; font-weight: 700; margin-top: 2px; color: var(--accent); }
+
+.result-body {
+  padding: 28px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+@media (max-width: 600px) { .result-body { grid-template-columns: 1fr; } }
+
+.photo-label { font-size: 11px; font-family: 'Space Mono', monospace; color: var(--muted); letter-spacing: 2px; margin-bottom: 10px; }
+.photo-frame {
+  width: 100%; aspect-ratio: 4/3;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.photo-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+.photo-placeholder { text-align: center; color: var(--muted); }
+.photo-placeholder-icon { font-size: 36px; margin-bottom: 8px; }
+.photo-placeholder-text { font-size: 12px; font-family: 'Space Mono', monospace; }
+
+.info-grid { display: flex; flex-direction: column; gap: 16px; }
+.info-item { padding: 14px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; }
+.info-item-label { font-size: 10px; font-family: 'Space Mono', monospace; color: var(--muted); letter-spacing: 2px; margin-bottom: 5px; }
+.info-item-value { font-family: 'Space Mono', monospace; font-size: 15px; color: var(--text); word-break: break-all; }
+.info-item-value.highlight { color: var(--accent); font-size: 18px; font-weight: 700; }
+.info-item-value.time { font-size: 14px; }
+
+.not-found-body { padding: 48px 28px; text-align: center; color: var(--muted); }
+.not-found-icon { font-size: 48px; margin-bottom: 16px; }
+.not-found-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+.not-found-sub { font-size: 13px; font-family: 'Space Mono', monospace; }
+
+.records-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+.records-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.records-title { font-size: 12px; font-family: 'Space Mono', monospace; color: var(--muted); letter-spacing: 2px; }
+.records-badge { background: var(--surface2); color: var(--muted); font-size: 11px; font-family: 'Space Mono', monospace; padding: 3px 10px; border-radius: 20px; }
+
+.record-row {
+  display: flex; align-items: center;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.15s;
+  gap: 16px;
+}
+.record-row:last-child { border-bottom: none; }
+.record-row:hover { background: var(--surface2); }
+.record-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.record-code { font-family: 'Space Mono', monospace; font-size: 13px; flex: 1; color: var(--text); }
+.record-time { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); }
+.record-thumb { width: 36px; height: 36px; border-radius: 6px; background: var(--bg); border: 1px solid var(--border); overflow: hidden; flex-shrink: 0; }
+.record-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+.empty-records { padding: 40px 24px; text-align: center; color: var(--muted); font-family: 'Space Mono', monospace; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">📦</div>
+    <div>
+      <div class="logo-text">SHIPMENT TRACKER</div>
+      <div class="logo-sub">包裹查詢系統</div>
+    </div>
+  </div>
+  <div class="header-clock" id="header-clock">—</div>
+</div>
+
+<div class="container">
+
+  <div class="search-card">
+    <div class="search-title">查詢包裹記錄</div>
+    <div class="search-desc">輸入寄件編號查詢出貨時間與面單照片</div>
+    <div class="search-row">
+      <input class="search-input" id="search-input" type="text"
+        placeholder="輸入寄件編號，例如 TW263237468696K"
+        autocomplete="off" autocorrect="off" autocapitalize="characters"
+        spellcheck="false"
+        onkeydown="if(event.key==='Enter') doSearch()">
+      <button class="search-button" onclick="doSearch()">查詢</button>
+    </div>
+  </div>
+
+  <div class="result-area" id="result-area">
+    <div class="section-header">
+      <span class="section-title">查詢結果</span>
+    </div>
+    <div class="result-card" id="result-card"></div>
+  </div>
+
+  <div class="section-header">
+    <span class="section-title">最近出貨記錄</span>
+    <span class="record-count" id="record-count">共 0 筆</span>
+  </div>
+  <div class="records-card">
+    <div class="records-header">
+      <span class="records-title">RECENT SHIPMENTS</span>
+      <span class="records-badge" id="today-count">今日 0 筆</span>
+    </div>
+    <div id="records-list">
+      <div class="empty-records">尚無出貨記錄<br>完成出貨後將自動顯示</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function updateClock() {
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    document.getElementById('header-clock').textContent =
+      `${now.getFullYear()}/${pad(now.getMonth()+1)}/${pad(now.getDate())} ` +
+      `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  // Demo data（串接 Google Sheets 後替換）
+  const DEMO_RECORDS = [
+    { code: 'TW263237468696K', time: '2026-04-14 14:11:01', station: '包裝站1', photo: null, order: '260414R9DB481R' },
+    { code: 'TW268696666219R', time: '2026-04-14 14:11:01', station: '包裝站2', photo: null, order: '260414RF8VHNVW' },
+    { code: 'TW264127427248P', time: '2026-04-14 14:05:33', station: '包裝站1', photo: null, order: '260414R7SHKUH5' }
+  ];
+
+  function renderRecords(records) {
+    const list = document.getElementById('records-list');
+    const today = new Date().toISOString().slice(0, 10);
+    const todayCount = records.filter(r => r.time.startsWith(today)).length;
+    document.getElementById('record-count').textContent = `共 ${records.length} 筆`;
+    document.getElementById('today-count').textContent = `今日 ${todayCount} 筆`;
+    if (records.length === 0) {
+      list.innerHTML = '<div class="empty-records">尚無出貨記錄<br>完成出貨後將自動顯示</div>';
+      return;
+    }
+    list.innerHTML = records.map(r => `
+      <div class="record-row" onclick="searchByCode('${r.code}')">
+        <div class="record-dot"></div>
+        <div class="record-code">${r.code}</div>
+        <div class="record-time">${r.time}</div>
+        <div class="record-thumb">
+          ${r.photo
+            ? `<img src="${r.photo}" alt="">`
+            : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#3a3f52;font-size:14px">📷</div>`
+          }
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function doSearch() {
+    const raw = document.getElementById('search-input').value.trim().toUpperCase();
+    if (!raw) return;
+    searchByCode(raw);
+  }
+
+  function searchByCode(code) {
+    document.getElementById('search-input').value = code;
+    const record = DEMO_RECORDS.find(r =>
+      r.code.toUpperCase() === code || r.order.toUpperCase() === code
+    );
+    const area = document.getElementById('result-area');
+    const card = document.getElementById('result-card');
+    area.className = 'result-area show';
+    area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    if (record) {
+      card.className = 'result-card found';
+      card.innerHTML = `
+        <div class="result-header">
+          <div class="result-status-dot found"></div>
+          <div class="result-header-info">
+            <div class="result-header-title">FOUND · 查詢成功</div>
+            <div class="result-header-code">${record.code}</div>
+          </div>
+        </div>
+        <div class="result-body">
+          <div class="photo-panel">
+            <div class="photo-label">PACKAGE PHOTO · 面單照片</div>
+            <div class="photo-frame">
+              ${record.photo
+                ? `<img src="${record.photo}" alt="面單照片">`
+                : `<div class="photo-placeholder">
+                    <div class="photo-placeholder-icon">📷</div>
+                    <div class="photo-placeholder-text">照片串接後顯示</div>
+                   </div>`
+              }
+            </div>
+          </div>
+          <div class="info-panel">
+            <div class="info-grid">
+              <div class="info-item">
+                <div class="info-item-label">TRACKING NO. · 寄件編號</div>
+                <div class="info-item-value highlight">${record.code}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-item-label">SHIP TIME · 出貨時間</div>
+                <div class="info-item-value time">${record.time}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-item-label">ORDER NO. · 訂單編號</div>
+                <div class="info-item-value">${record.order}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-item-label">STATION · 包裝站</div>
+                <div class="info-item-value">${record.station}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    } else {
+      card.className = 'result-card not-found';
+      card.innerHTML = `
+        <div class="not-found-body">
+          <div class="not-found-icon">🔍</div>
+          <div class="not-found-title">查無此編號</div>
+          <div class="not-found-sub">${code}<br><br>請確認編號是否正確，或尚未完成出貨記錄</div>
+        </div>
+      `;
+    }
+  }
+
+  renderRecords(DEMO_RECORDS);
+</script>
+</body>
+</html>

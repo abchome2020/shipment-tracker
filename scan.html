@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>包裝站掃碼</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --border: #2a2d3a;
+  --accent: #00e5a0;
+  --accent2: #005f43;
+  --danger: #ff4f4f;
+  --text: #f0f2f5;
+  --muted: #6b7280;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans TC', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+.header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.station-badge {
+  background: var(--accent2);
+  color: var(--accent);
+  font-size: 11px;
+  font-family: 'Space Mono', monospace;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 1px;
+}
+
+.main {
+  flex: 1;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 480px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--muted);
+  transition: background 0.3s;
+  flex-shrink: 0;
+}
+.status-dot.active { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+.status-dot.error { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+.status-text {
+  font-size: 13px;
+  color: var(--muted);
+  font-family: 'Space Mono', monospace;
+}
+.status-text.active { color: var(--accent); }
+.status-text.error { color: var(--danger); }
+
+.scan-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.section-label {
+  padding: 14px 18px 10px;
+  font-size: 11px;
+  font-family: 'Space Mono', monospace;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+.scan-area {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.scan-btn {
+  width: 100%;
+  padding: 20px;
+  background: transparent;
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.scan-btn:active {
+  border-color: var(--accent);
+  background: rgba(0, 229, 160, 0.05);
+}
+.scan-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--accent);
+}
+
+#qr-reader {
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  display: none;
+}
+#qr-reader video {
+  width: 100% !important;
+  border-radius: 10px;
+}
+
+.result-box {
+  background: rgba(0, 229, 160, 0.05);
+  border: 1px solid var(--accent2);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: none;
+}
+.result-box.show { display: block; }
+.result-label {
+  font-size: 10px;
+  font-family: 'Space Mono', monospace;
+  color: var(--accent);
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+.result-value {
+  font-family: 'Space Mono', monospace;
+  font-size: 16px;
+  color: var(--text);
+  word-break: break-all;
+  font-weight: 700;
+}
+.result-time {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+  font-family: 'Space Mono', monospace;
+}
+
+.manual-toggle {
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  text-decoration: underline;
+  -webkit-tap-highlight-color: transparent;
+}
+.manual-input-wrap {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+}
+.manual-input-wrap.show { display: flex; }
+.text-input {
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.text-input:focus { border-color: var(--accent); }
+.text-input::placeholder { color: var(--muted); }
+.confirm-btn {
+  padding: 14px;
+  background: var(--accent2);
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  color: var(--accent);
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  -webkit-tap-highlight-color: transparent;
+}
+.confirm-btn:active { opacity: 0.7; }
+
+.photo-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  opacity: 0.4;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.photo-section.enabled {
+  opacity: 1;
+  pointer-events: all;
+}
+.photo-area {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.camera-btn {
+  width: 100%;
+  padding: 28px 20px;
+  background: var(--accent);
+  border: none;
+  border-radius: 12px;
+  color: #000;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 18px;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  letter-spacing: 1px;
+}
+.camera-btn:active {
+  transform: scale(0.97);
+  background: #00c88a;
+}
+.camera-btn svg { width: 28px; height: 28px; }
+
+#photo-input { display: none; }
+
+.preview-wrap {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+.preview-wrap.show { display: flex; }
+.preview-img {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  max-height: 240px;
+  object-fit: cover;
+}
+.preview-actions {
+  display: flex;
+  gap: 10px;
+}
+.retake-btn {
+  flex: 1;
+  padding: 13px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--muted);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.retake-btn:active { opacity: 0.6; }
+.upload-btn {
+  flex: 2;
+  padding: 13px;
+  background: var(--accent);
+  border: none;
+  border-radius: 10px;
+  color: #000;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  opacity: 0.4;
+}
+.upload-btn.ready { opacity: 1; }
+.upload-btn:active { opacity: 0.7; }
+
+.success-banner {
+  display: none;
+  padding: 16px 18px;
+  background: rgba(0, 229, 160, 0.1);
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  text-align: center;
+  flex-direction: column;
+  gap: 4px;
+}
+.success-banner.show { display: flex; }
+.success-title { font-size: 15px; font-weight: 700; color: var(--accent); }
+.success-sub { font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; }
+
+.reset-btn {
+  width: 100%;
+  padding: 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--muted);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  display: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.reset-btn.show { display: block; }
+.reset-btn:active { opacity: 0.6; }
+
+.timestamp {
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  padding-bottom: 20px;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-title">📦 包裝站</span>
+  <span class="station-badge" id="clock">--:--:--</span>
+</div>
+
+<div class="main">
+
+  <div class="status-bar">
+    <div class="status-dot" id="status-dot"></div>
+    <span class="status-text" id="status-text">等待掃描寄件編號</span>
+  </div>
+
+  <div class="scan-section">
+    <div class="section-label">① 掃描寄件編號</div>
+    <div class="scan-area">
+      <button class="scan-btn" id="scan-btn" onclick="startScan()">
+        <svg class="scan-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 4v1m0 14v1M4 12h1m14 0h1m-2.636-6.364l-.707.707M7.343 16.657l-.707.707m0-9.9l.707.707M16.657 16.657l.707.707"/>
+        </svg>
+        點此掃描 QR Code
+      </button>
+
+      <div id="qr-reader"></div>
+
+      <div class="result-box" id="result-box">
+        <div class="result-label">TRACKING NO.</div>
+        <div class="result-value" id="result-value">—</div>
+        <div class="result-time" id="result-time">—</div>
+      </div>
+
+      <div class="manual-toggle" onclick="toggleManual()">手動輸入編號</div>
+      <div class="manual-input-wrap" id="manual-wrap">
+        <input class="text-input" id="manual-input" type="text"
+          placeholder="TW263237468696K" autocomplete="off" autocorrect="off"
+          autocapitalize="characters" spellcheck="false">
+        <button class="confirm-btn" onclick="confirmManual()">確認編號</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="photo-section" id="photo-section">
+    <div class="section-label">② 拍攝面單照片</div>
+    <div class="photo-area">
+      <button class="camera-btn" onclick="triggerCamera()">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        拍攝照片
+      </button>
+
+      <input type="file" id="photo-input" accept="image/*" capture="environment"
+        onchange="handlePhoto(event)">
+
+      <div class="preview-wrap" id="preview-wrap">
+        <img class="preview-img" id="preview-img" src="" alt="預覽">
+        <div class="preview-actions">
+          <button class="retake-btn" onclick="retakePhoto()">重拍</button>
+          <button class="upload-btn" id="upload-btn" onclick="uploadPhoto()">上傳儲存（開發中）</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="success-banner" id="success-banner">
+    <div class="success-title">✓ 記錄完成</div>
+    <div class="success-sub" id="success-info">—</div>
+  </div>
+
+  <button class="reset-btn" id="reset-btn" onclick="resetAll()">下一件包裹</button>
+
+  <div class="timestamp" id="timestamp">—</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+<script>
+  let currentCode = null;
+  let currentTime = null;
+  let photoFile = null;
+  let html5QrcodeScanner = null;
+  let scanning = false;
+
+  function updateClock() {
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    document.getElementById('clock').textContent =
+      `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+    document.getElementById('timestamp').textContent =
+      `${now.getFullYear()}/${pad(now.getMonth()+1)}/${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  function formatDateTime(d) {
+    const pad = n => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ` +
+           `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  }
+
+  function setStatus(type, msg) {
+    const dot = document.getElementById('status-dot');
+    const text = document.getElementById('status-text');
+    dot.className = 'status-dot' + (type ? ' ' + type : '');
+    text.className = 'status-text' + (type ? ' ' + type : '');
+    text.textContent = msg;
+  }
+
+  function startScan() {
+    if (scanning) return;
+    scanning = true;
+    document.getElementById('scan-btn').style.display = 'none';
+    document.getElementById('qr-reader').style.display = 'block';
+    setStatus('active', '掃描中...');
+
+    html5QrcodeScanner = new Html5Qrcode("qr-reader");
+    html5QrcodeScanner.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: { width: 250, height: 120 } },
+      (decodedText) => {
+        let code = decodedText.trim();
+        const match = code.match(/TW[A-Z0-9]+/);
+        if (match) code = match[0];
+        stopScan();
+        setCode(code);
+      },
+      () => {}
+    ).catch(() => {
+      setStatus('error', '無法開啟相機，請手動輸入');
+      scanning = false;
+      document.getElementById('scan-btn').style.display = 'flex';
+      document.getElementById('qr-reader').style.display = 'none';
+      document.getElementById('manual-wrap').className = 'manual-input-wrap show';
+    });
+  }
+
+  function stopScan() {
+    if (html5QrcodeScanner) {
+      html5QrcodeScanner.stop().then(() => {
+        document.getElementById('qr-reader').style.display = 'none';
+        scanning = false;
+      }).catch(() => {
+        document.getElementById('qr-reader').style.display = 'none';
+        scanning = false;
+      });
+    }
+  }
+
+  function setCode(code) {
+    currentCode = code;
+    currentTime = new Date();
+    const timeStr = formatDateTime(currentTime);
+    document.getElementById('result-value').textContent = code;
+    document.getElementById('result-time').textContent = '掃描時間：' + timeStr;
+    document.getElementById('result-box').className = 'result-box show';
+    document.getElementById('scan-btn').style.display = 'none';
+    document.getElementById('photo-section').className = 'photo-section enabled';
+    setStatus('active', '請拍攝面單照片');
+  }
+
+  function toggleManual() {
+    const wrap = document.getElementById('manual-wrap');
+    wrap.className = wrap.className.includes('show')
+      ? 'manual-input-wrap'
+      : 'manual-input-wrap show';
+  }
+
+  function confirmManual() {
+    const val = document.getElementById('manual-input').value.trim().toUpperCase();
+    if (!val) return;
+    stopScan();
+    document.getElementById('manual-wrap').className = 'manual-input-wrap';
+    setCode(val);
+  }
+
+  function triggerCamera() {
+    document.getElementById('photo-input').click();
+  }
+
+  function handlePhoto(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    photoFile = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      document.getElementById('preview-img').src = e.target.result;
+      document.getElementById('preview-wrap').className = 'preview-wrap show';
+      document.getElementById('upload-btn').className = 'upload-btn ready';
+    };
+    reader.readAsDataURL(file);
+    setStatus('active', '確認照片後點上傳');
+  }
+
+  function retakePhoto() {
+    photoFile = null;
+    document.getElementById('photo-input').value = '';
+    document.getElementById('preview-wrap').className = 'preview-wrap';
+    document.getElementById('preview-img').src = '';
+    setStatus('active', '請重新拍攝面單照片');
+  }
+
+  function uploadPhoto() {
+    if (!photoFile || !currentCode) return;
+    setStatus('active', '上傳中...');
+    setTimeout(() => {
+      const info = `${currentCode} · ${formatDateTime(currentTime)}`;
+      document.getElementById('success-banner').className = 'success-banner show';
+      document.getElementById('success-info').textContent = info;
+      document.getElementById('reset-btn').className = 'reset-btn show';
+      setStatus('active', '記錄完成！');
+    }, 800);
+  }
+
+  function resetAll() {
+    currentCode = null;
+    currentTime = null;
+    photoFile = null;
+    scanning = false;
+    document.getElementById('scan-btn').style.display = 'flex';
+    document.getElementById('qr-reader').style.display = 'none';
+    document.getElementById('result-box').className = 'result-box';
+    document.getElementById('result-value').textContent = '—';
+    document.getElementById('result-time').textContent = '—';
+    document.getElementById('manual-input').value = '';
+    document.getElementById('manual-wrap').className = 'manual-input-wrap';
+    document.getElementById('photo-section').className = 'photo-section';
+    document.getElementById('preview-wrap').className = 'preview-wrap';
+    document.getElementById('preview-img').src = '';
+    document.getElementById('photo-input').value = '';
+    document.getElementById('success-banner').className = 'success-banner';
+    document.getElementById('reset-btn').className = 'reset-btn';
+    setStatus('', '等待掃描寄件編號');
+  }
+</script>
+</body>
+</html>
