@@ -17,10 +17,10 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
 .header-title { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; }
 .station-badge { background: var(--accent2); color: var(--accent3); font-size: 11px; font-family: 'Space Mono', monospace; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); }
 .main { flex: 1; padding: 24px 20px; display: flex; flex-direction: column; gap: 20px; max-width: 480px; margin: 0 auto; width: 100%; }
-.status-bar { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 1px 4px rgba(181,149,106,0.08); }
-.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); transition: background 0.3s; flex-shrink: 0; }
+.status-bar { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
 .status-dot.active { background: var(--accent); box-shadow: 0 0 8px rgba(181,149,106,0.5); }
-.status-dot.error { background: var(--danger); box-shadow: 0 0 8px rgba(192,84,79,0.4); }
+.status-dot.error { background: var(--danger); }
 .status-text { font-size: 13px; color: var(--muted); font-family: 'Space Mono', monospace; }
 .status-text.active { color: var(--accent3); }
 .status-text.error { color: var(--danger); }
@@ -29,12 +29,11 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
 .step-pill.active { border-color: var(--accent); color: var(--accent3); background: var(--accent2); }
 .step-pill.done { border-color: var(--accent); color: var(--accent); background: var(--accent2); }
 .step-pill.done::before { content: '✓ '; }
-.section { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; opacity: 0.45; pointer-events: none; transition: opacity 0.3s; box-shadow: 0 1px 6px rgba(181,149,106,0.07); }
+.section { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; opacity: 0.45; pointer-events: none; transition: opacity 0.3s; }
 .section.enabled { opacity: 1; pointer-events: all; }
 .section-label { padding: 14px 18px 10px; font-size: 11px; font-family: 'Space Mono', monospace; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid var(--border); background: #faf7f4; }
 .section-area { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
-.scan-btn { width: 100%; padding: 20px; background: transparent; border: 2px dashed var(--border); border-radius: 12px; color: var(--text); font-family: 'Noto Sans TC', sans-serif; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; -webkit-tap-highlight-color: transparent; transition: all 0.2s; }
-.scan-btn:active { border-color: var(--accent); background: var(--accent2); }
+.scan-btn { width: 100%; padding: 20px; background: transparent; border: 2px dashed var(--border); border-radius: 12px; color: var(--text); font-family: 'Noto Sans TC', sans-serif; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; }
 .scan-icon { width: 28px; height: 28px; color: var(--accent); }
 #qr-reader { width: 100%; border-radius: 10px; overflow: hidden; display: none; }
 #qr-reader video { width: 100% !important; border-radius: 10px; }
@@ -43,16 +42,17 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
 .result-label { font-size: 10px; font-family: 'Space Mono', monospace; color: var(--accent3); letter-spacing: 2px; margin-bottom: 6px; }
 .result-value { font-family: 'Space Mono', monospace; font-size: 16px; color: var(--text); word-break: break-all; font-weight: 700; }
 .result-time { font-size: 11px; color: var(--muted); margin-top: 4px; font-family: 'Space Mono', monospace; }
-.manual-toggle { text-align: center; font-size: 12px; color: var(--muted); cursor: pointer; text-decoration: underline; -webkit-tap-highlight-color: transparent; }
+.manual-toggle { text-align: center; font-size: 12px; color: var(--muted); cursor: pointer; text-decoration: underline; }
 .manual-input-wrap { display: none; flex-direction: column; gap: 8px; }
 .manual-input-wrap.show { display: flex; }
-.text-input { width: 100%; padding: 14px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'Space Mono', monospace; font-size: 15px; outline: none; transition: border-color 0.2s; }
+.text-input { width: 100%; padding: 14px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'Space Mono', monospace; font-size: 15px; outline: none; }
 .text-input:focus { border-color: var(--accent); }
 .text-input::placeholder { color: var(--muted); }
-.confirm-btn { padding: 14px; background: var(--accent2); border: 1px solid var(--accent); border-radius: 10px; color: var(--accent3); font-family: 'Space Mono', monospace; font-size: 13px; cursor: pointer; }
-.camera-btn { width: 100%; padding: 22px 20px; background: var(--accent); border: none; border-radius: 12px; color: #fff; font-family: 'Noto Sans TC', sans-serif; font-size: 17px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; -webkit-tap-highlight-color: transparent; }
-.camera-btn:active { transform: scale(0.97); background: var(--accent3); }
+.confirm-btn { padding: 14px; background: var(--accent2); border: 1px solid var(--accent); border-radius: 10px; color: var(--accent3); font-family: 'Noto Sans TC', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; text-align: center; }
+.camera-btn { width: 100%; padding: 22px 20px; background: var(--accent); border: none; border-radius: 12px; color: #fff; font-family: 'Noto Sans TC', sans-serif; font-size: 17px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; }
+.camera-btn:active { background: var(--accent3); }
 .camera-btn svg { width: 26px; height: 26px; }
+.photo-input-hidden { position: absolute; left: -9999px; opacity: 0; width: 1px; height: 1px; }
 .preview-wrap { display: none; flex-direction: column; gap: 10px; }
 .preview-wrap.show { display: flex; }
 .preview-img { width: 100%; border-radius: 10px; border: 1px solid var(--border); max-height: 200px; object-fit: cover; }
@@ -87,6 +87,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
     <div class="step-pill" id="step4">④ 包裝</div>
   </div>
 
+  <!-- Step 1 -->
   <div class="section enabled" id="sec-scan">
     <div class="section-label">① 掃描寄件編號（明細單右上）</div>
     <div class="section-area">
@@ -102,317 +103,299 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
         <div class="result-value" id="result-value">—</div>
         <div class="result-time" id="result-time">—</div>
       </div>
-      <div class="manual-toggle" onclick="toggleManual()">手動輸入編號</div>
+      <div class="manual-toggle" id="manual-toggle">手動輸入編號</div>
       <div class="manual-input-wrap" id="manual-wrap">
-        <input class="text-input" id="manual-input" type="text" placeholder="例：035200010277053" autocomplete="off" autocapitalize="characters" spellcheck="false">
-        <button class="confirm-btn" onclick="confirmManual()">確認編號</button>
+        <input class="text-input" id="manual-input" type="text"
+          placeholder="例：035200010277053"
+          autocomplete="off" autocapitalize="characters" spellcheck="false">
+        <button class="confirm-btn" id="confirm-btn">確認編號</button>
       </div>
     </div>
   </div>
 
+  <!-- Step 2 -->
   <div class="section" id="sec-photo1">
     <div class="section-label">② 拍攝內容物照片</div>
     <div class="section-area">
-      <button class="camera-btn" onclick="triggerCamera('photo1-input')">
+      <button class="camera-btn" id="cam-btn1">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         拍攝內容物
       </button>
-      <input type="file" id="photo1-input" accept="image/*" capture="environment" onchange="handlePhoto(event,'photo1')">
+      <input class="photo-input-hidden" type="file" id="photo1-input" accept="image/*" capture="environment">
       <div class="preview-wrap" id="photo1-preview">
         <img class="preview-img" id="photo1-img" src="" alt="內容物">
         <div class="photo-done-hint">✓ 已拍攝，請繼續下方步驟</div>
-        <button class="retake-btn" onclick="retakePhoto('photo1')">重拍</button>
+        <button class="retake-btn" id="retake1">重拍</button>
       </div>
     </div>
   </div>
 
+  <!-- Step 3 -->
   <div class="section" id="sec-photo2">
     <div class="section-label">③ 拍攝物流單照片</div>
     <div class="section-area">
-      <button class="camera-btn" onclick="triggerCamera('photo2-input')">
+      <button class="camera-btn" id="cam-btn2">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         拍攝物流單
       </button>
-      <input type="file" id="photo2-input" accept="image/*" capture="environment" onchange="handlePhoto(event,'photo2')">
+      <input class="photo-input-hidden" type="file" id="photo2-input" accept="image/*" capture="environment">
       <div class="preview-wrap" id="photo2-preview">
         <img class="preview-img" id="photo2-img" src="" alt="物流單">
         <div class="photo-done-hint">✓ 已拍攝，請繼續下方步驟</div>
-        <button class="retake-btn" onclick="retakePhoto('photo2')">重拍</button>
+        <button class="retake-btn" id="retake2">重拍</button>
       </div>
     </div>
   </div>
 
+  <!-- Step 4 -->
   <div class="section" id="sec-photo3">
     <div class="section-label">④ 拍攝包裝完成照片</div>
     <div class="section-area">
-      <button class="camera-btn" onclick="triggerCamera('photo3-input')">
+      <button class="camera-btn" id="cam-btn3">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         拍攝包裝完成
       </button>
-      <input type="file" id="photo3-input" accept="image/*" capture="environment" onchange="handlePhoto(event,'photo3')">
+      <input class="photo-input-hidden" type="file" id="photo3-input" accept="image/*" capture="environment">
       <div class="preview-wrap" id="photo3-preview">
         <img class="preview-img" id="photo3-img" src="" alt="包裝完成">
         <div class="photo-done-hint">✓ 已拍攝，請點上傳</div>
-        <button class="retake-btn" onclick="retakePhoto('photo3')">重拍</button>
+        <button class="retake-btn" id="retake3">重拍</button>
       </div>
     </div>
   </div>
 
-  <button class="upload-all-btn" id="upload-all-btn" onclick="uploadAll()">⬆ 上傳儲存</button>
+  <button class="upload-all-btn" id="upload-all-btn">⬆ 上傳儲存</button>
   <div class="success-banner" id="success-banner">
     <div class="success-title">✓ 記錄完成</div>
     <div class="success-sub" id="success-info">—</div>
   </div>
-  <button class="reset-btn" id="reset-btn" onclick="resetAll()">下一件包裹</button>
+  <button class="reset-btn" id="reset-btn">下一件包裹</button>
   <div class="timestamp" id="timestamp">—</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
 <script>
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzqXBFD3IKHbkJV9WKhK_Ew9qRWTME8cq00RnddDraCVi9j2EBzYmaJPH7sTJNHvrwd4w/exec';
-const STATION = '包裝站1'; // 每台手機改這裡：包裝站1 / 包裝站2 / 包裝站3 / 包裝站4
+const STATION = '包裝站1';
 
 let currentCode = null, currentTime = null;
 let photos = { photo1: null, photo2: null, photo3: null };
-let html5QrcodeScanner = null, scanning = false;
+let scanner = null, scanning = false;
 
+// Clock
 function updateClock() {
   const now = new Date(), pad = n => String(n).padStart(2,'0');
-  document.getElementById('clock').textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
-  document.getElementById('timestamp').textContent = `${now.getFullYear()}/${pad(now.getMonth()+1)}/${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  document.getElementById('clock').textContent = pad(now.getHours())+':'+pad(now.getMinutes())+':'+pad(now.getSeconds());
+  document.getElementById('timestamp').textContent = now.getFullYear()+'/'+pad(now.getMonth()+1)+'/'+pad(now.getDate())+' '+pad(now.getHours())+':'+pad(now.getMinutes())+':'+pad(now.getSeconds());
 }
 setInterval(updateClock, 1000); updateClock();
 
-function formatDateTime(d) {
+function fmt(d) {
   const pad = n => String(n).padStart(2,'0');
-  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
 }
 
 function setStatus(type, msg) {
-  document.getElementById('status-dot').className = 'status-dot' + (type ? ' '+type : '');
-  document.getElementById('status-text').className = 'status-text' + (type ? ' '+type : '');
+  document.getElementById('status-dot').className = 'status-dot'+(type?' '+type:'');
+  document.getElementById('status-text').className = 'status-text'+(type?' '+type:'');
   document.getElementById('status-text').textContent = msg;
 }
 
 function setStep(n) {
-  ['step1','step2','step3','step4'].forEach((id,i) => {
-    const el = document.getElementById(id);
-    if (i+1 < n) el.className = 'step-pill done';
-    else if (i+1 === n) el.className = 'step-pill active';
-    else el.className = 'step-pill';
+  ['step1','step2','step3','step4'].forEach(function(id,i){
+    var el = document.getElementById(id);
+    if(i+1 < n) el.className='step-pill done';
+    else if(i+1===n) el.className='step-pill active';
+    else el.className='step-pill';
   });
 }
 
+function enableSection(id) {
+  document.getElementById(id).className = 'section enabled';
+}
+
+// QR Scan
+document.getElementById('scan-btn').addEventListener('click', startScan);
 function startScan() {
-  if (scanning) return;
+  if(scanning) return;
   scanning = true;
   document.getElementById('scan-btn').style.display = 'none';
   document.getElementById('qr-reader').style.display = 'block';
-  setStatus('active', '掃描中...');
-  html5QrcodeScanner = new Html5Qrcode("qr-reader");
-  html5QrcodeScanner.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: { width: 250, height: 120 } },
-    (decodedText) => { stopScan(); setCode(decodedText.trim().replace(/-/g,'')); },
-    () => {}
-  ).catch(() => {
-    setStatus('error', '無法開啟相機，請手動輸入');
-    scanning = false;
-    document.getElementById('scan-btn').style.display = 'flex';
-    document.getElementById('qr-reader').style.display = 'none';
-    document.getElementById('manual-wrap').className = 'manual-input-wrap show';
+  setStatus('active','掃描中...');
+  scanner = new Html5Qrcode('qr-reader');
+  scanner.start({facingMode:'environment'},{fps:10,qrbox:{width:250,height:120}},
+    function(text){ stopScan(); setCode(text.trim().replace(/-/g,'')); },
+    function(){}
+  ).catch(function(){
+    setStatus('error','無法開啟相機，請手動輸入');
+    scanning=false;
+    document.getElementById('scan-btn').style.display='flex';
+    document.getElementById('qr-reader').style.display='none';
+    document.getElementById('manual-wrap').className='manual-input-wrap show';
   });
 }
 
 function stopScan() {
-  if (html5QrcodeScanner) {
-    html5QrcodeScanner.stop().then(() => { document.getElementById('qr-reader').style.display = 'none'; scanning = false; })
-    .catch(() => { document.getElementById('qr-reader').style.display = 'none'; scanning = false; });
-  }
+  if(scanner){ scanner.stop().catch(function(){}); }
+  document.getElementById('qr-reader').style.display='none';
+  scanning=false;
 }
+
+// Manual input
+document.getElementById('manual-toggle').addEventListener('click', function(){
+  var w=document.getElementById('manual-wrap');
+  w.className=w.className.includes('show')?'manual-input-wrap':'manual-input-wrap show';
+});
+
+document.getElementById('confirm-btn').addEventListener('click', function(){
+  var val=document.getElementById('manual-input').value.trim().replace(/-/g,'').toUpperCase();
+  if(!val){ alert('請輸入編號'); return; }
+  stopScan();
+  document.getElementById('manual-wrap').className='manual-input-wrap';
+  setCode(val);
+});
+
+document.getElementById('manual-input').addEventListener('keydown', function(e){
+  if(e.key==='Enter') document.getElementById('confirm-btn').click();
+});
 
 function setCode(code) {
-  currentCode = code; currentTime = new Date();
-  document.getElementById('result-value').textContent = code;
-  document.getElementById('result-time').textContent = '掃描時間：' + formatDateTime(currentTime);
-  document.getElementById('result-box').className = 'result-box show';
-  document.getElementById('scan-btn').style.display = 'none';
-  document.getElementById('sec-photo1').className = 'section enabled';
-  setStatus('active', '請拍攝內容物照片');
+  currentCode=code; currentTime=new Date();
+  document.getElementById('result-value').textContent=code;
+  document.getElementById('result-time').textContent='掃描時間：'+fmt(currentTime);
+  document.getElementById('result-box').className='result-box show';
+  document.getElementById('scan-btn').style.display='none';
+  enableSection('sec-photo1');
+  setStatus('active','請拍攝內容物照片');
   setStep(2);
-  setTimeout(() => document.getElementById('sec-photo1').scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+  setTimeout(function(){ document.getElementById('sec-photo1').scrollIntoView({behavior:'smooth',block:'start'}); },300);
 }
 
-function toggleManual() {
-  const w = document.getElementById('manual-wrap');
-  w.className = w.className.includes('show') ? 'manual-input-wrap' : 'manual-input-wrap show';
+// Photo handlers
+function setupPhoto(btnId, inputId, previewId, imgId, retakeId, onDone) {
+  document.getElementById(btnId).addEventListener('click', function(){
+    document.getElementById(inputId).click();
+  });
+  document.getElementById(inputId).addEventListener('change', function(e){
+    var file=e.target.files[0];
+    if(!file) return;
+    photos[inputId.replace('-input','')] = file;
+    var reader=new FileReader();
+    reader.onload=function(ev){
+      document.getElementById(imgId).src=ev.target.result;
+      document.getElementById(previewId).className='preview-wrap show';
+      onDone();
+    };
+    reader.readAsDataURL(file);
+  });
+  document.getElementById(retakeId).addEventListener('click', function(){
+    photos[inputId.replace('-input','')]=null;
+    document.getElementById(inputId).value='';
+    document.getElementById(previewId).className='preview-wrap';
+    document.getElementById(imgId).src='';
+  });
 }
 
-function confirmManual() {
-  const val = document.getElementById('manual-input').value.trim().replace(/-/g,'').toUpperCase();
-  if (!val) return;
-  stopScan();
-  document.getElementById('manual-wrap').className = 'manual-input-wrap';
-  setCode(val);
-}
+setupPhoto('cam-btn1','photo1-input','photo1-preview','photo1-img','retake1', function(){
+  enableSection('sec-photo2');
+  setStatus('active','請拍攝物流單照片');
+  setStep(3);
+  setTimeout(function(){ document.getElementById('sec-photo2').scrollIntoView({behavior:'smooth',block:'start'}); },300);
+});
 
-function triggerCamera(inputId) { document.getElementById(inputId).click(); }
+setupPhoto('cam-btn2','photo2-input','photo2-preview','photo2-img','retake2', function(){
+  enableSection('sec-photo3');
+  setStatus('active','請拍攝包裝完成照片');
+  setStep(4);
+  setTimeout(function(){ document.getElementById('sec-photo3').scrollIntoView({behavior:'smooth',block:'start'}); },300);
+});
 
-// 壓縮圖片（避免上傳太慢）
-function compressImage(file, maxWidth, quality) {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        let w = img.width, h = img.height;
-        if (w > maxWidth) { h = h * maxWidth / w; w = maxWidth; }
-        canvas.width = w; canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL('image/jpeg', quality));
+setupPhoto('cam-btn3','photo3-input','photo3-preview','photo3-img','retake3', function(){
+  document.getElementById('upload-all-btn').className='upload-all-btn show';
+  setStatus('active','三張照片完成，請上傳');
+  setTimeout(function(){ document.getElementById('upload-all-btn').scrollIntoView({behavior:'smooth',block:'start'}); },300);
+});
+
+// Compress
+function compressImage(file, maxW, quality) {
+  return new Promise(function(resolve){
+    var reader=new FileReader();
+    reader.onload=function(e){
+      var img=new Image();
+      img.onload=function(){
+        var canvas=document.createElement('canvas');
+        var w=img.width, h=img.height;
+        if(w>maxW){ h=h*maxW/w; w=maxW; }
+        canvas.width=w; canvas.height=h;
+        canvas.getContext('2d').drawImage(img,0,0,w,h);
+        resolve(canvas.toDataURL('image/jpeg',quality));
       };
-      img.src = e.target.result;
+      img.src=e.target.result;
     };
     reader.readAsDataURL(file);
   });
 }
 
-function handlePhoto(event, key) {
-  const file = event.target.files[0];
-  if (!file) return;
-  photos[key] = file;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    document.getElementById(key+'-img').src = e.target.result;
-    document.getElementById(key+'-preview').className = 'preview-wrap show';
-    if (key === 'photo1') {
-      document.getElementById('sec-photo2').className = 'section enabled';
-      setStatus('active', '請拍攝物流單照片');
-      setStep(3);
-      setTimeout(() => document.getElementById('sec-photo2').scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
-    } else if (key === 'photo2') {
-      document.getElementById('sec-photo3').className = 'section enabled';
-      setStatus('active', '請拍攝包裝完成照片');
-      setStep(4);
-      setTimeout(() => document.getElementById('sec-photo3').scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
-    } else if (key === 'photo3') {
-      document.getElementById('upload-all-btn').className = 'upload-all-btn show';
-      setStatus('active', '三張照片完成，請上傳');
-      setTimeout(() => document.getElementById('upload-all-btn').scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
-    }
-  };
-  reader.readAsDataURL(file);
-}
-
-function retakePhoto(key) {
-  photos[key] = null;
-  document.getElementById(key+'-input').value = '';
-  document.getElementById(key+'-preview').className = 'preview-wrap';
-  document.getElementById(key+'-img').src = '';
-  if (key === 'photo1') {
-    document.getElementById('sec-photo2').className = 'section';
-    document.getElementById('sec-photo3').className = 'section';
-    document.getElementById('upload-all-btn').className = 'upload-all-btn';
-    photos.photo2 = null; photos.photo3 = null;
-    ['photo2','photo3'].forEach(k => {
-      document.getElementById(k+'-input').value = '';
-      document.getElementById(k+'-preview').className = 'preview-wrap';
-      document.getElementById(k+'-img').src = '';
-    });
-    setStatus('active', '請重新拍攝內容物照片'); setStep(2);
-  } else if (key === 'photo2') {
-    document.getElementById('sec-photo3').className = 'section';
-    document.getElementById('upload-all-btn').className = 'upload-all-btn';
-    photos.photo3 = null;
-    document.getElementById('photo3-input').value = '';
-    document.getElementById('photo3-preview').className = 'preview-wrap';
-    document.getElementById('photo3-img').src = '';
-    setStatus('active', '請重新拍攝物流單照片'); setStep(3);
-  } else if (key === 'photo3') {
-    document.getElementById('upload-all-btn').className = 'upload-all-btn';
-    setStatus('active', '請重新拍攝包裝完成照片'); setStep(4);
-  }
-}
-
+// Upload
+document.getElementById('upload-all-btn').addEventListener('click', uploadAll);
 async function uploadAll() {
-  if (!photos.photo1 || !photos.photo2 || !photos.photo3 || !currentCode) return;
-  const btn = document.getElementById('upload-all-btn');
-  btn.disabled = true;
-  btn.textContent = '上傳中，請稍候...';
-  setStatus('active', '壓縮照片中...');
-
+  if(!photos.photo1||!photos.photo2||!photos.photo3||!currentCode) return;
+  var btn=document.getElementById('upload-all-btn');
+  btn.disabled=true; btn.textContent='上傳中，請稍候...';
+  setStatus('active','壓縮照片中...');
   try {
-    // 壓縮三張照片
-    const [p1, p2, p3] = await Promise.all([
-      compressImage(photos.photo1, 1200, 0.7),
-      compressImage(photos.photo2, 1200, 0.7),
-      compressImage(photos.photo3, 1200, 0.7),
-    ]);
-
-    setStatus('active', '上傳中...');
-
-    const payload = {
-      action: 'upload',
-      code:    currentCode,
-      time:    formatDateTime(currentTime),
-      station: STATION,
-      photo1:  p1,
-      photo2:  p2,
-      photo3:  p3,
-    };
-
-    const res = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify(payload),
+    var p1=await compressImage(photos.photo1,1200,0.7);
+    var p2=await compressImage(photos.photo2,1200,0.7);
+    var p3=await compressImage(photos.photo3,1200,0.7);
+    setStatus('active','上傳中...');
+    var res=await fetch(SCRIPT_URL,{
+      method:'POST',
+      body:JSON.stringify({action:'upload',code:currentCode,time:fmt(currentTime),station:STATION,photo1:p1,photo2:p2,photo3:p3})
     });
-    const result = await res.json();
-
-    if (result.success) {
-      document.getElementById('success-banner').className = 'success-banner show';
-      document.getElementById('success-info').textContent = `${currentCode} · ${formatDateTime(currentTime)}`;
-      document.getElementById('reset-btn').className = 'reset-btn show';
-      btn.style.display = 'none';
-      setStatus('active', '記錄完成！');
+    var result=await res.json();
+    if(result.success){
+      document.getElementById('success-banner').className='success-banner show';
+      document.getElementById('success-info').textContent=currentCode+' · '+fmt(currentTime);
+      document.getElementById('reset-btn').className='reset-btn show';
+      btn.style.display='none';
+      setStatus('active','記錄完成！');
     } else {
-      throw new Error(result.error || '上傳失敗');
+      throw new Error(result.error||'上傳失敗');
     }
-  } catch (err) {
-    setStatus('error', '上傳失敗：' + err.message);
-    btn.disabled = false;
-    btn.textContent = '⬆ 重新上傳';
+  } catch(err) {
+    setStatus('error','上傳失敗：'+err.message);
+    btn.disabled=false; btn.textContent='⬆ 重新上傳';
   }
 }
 
-function resetAll() {
-  currentCode = null; currentTime = null;
-  photos = { photo1: null, photo2: null, photo3: null };
-  scanning = false;
-  document.getElementById('scan-btn').style.display = 'flex';
-  document.getElementById('qr-reader').style.display = 'none';
-  document.getElementById('result-box').className = 'result-box';
-  document.getElementById('result-value').textContent = '—';
-  document.getElementById('result-time').textContent = '—';
-  document.getElementById('manual-input').value = '';
-  document.getElementById('manual-wrap').className = 'manual-input-wrap';
-  ['photo1','photo2','photo3'].forEach(k => {
-    document.getElementById(k+'-input').value = '';
-    document.getElementById(k+'-preview').className = 'preview-wrap';
-    document.getElementById(k+'-img').src = '';
+// Reset
+document.getElementById('reset-btn').addEventListener('click', function(){
+  currentCode=null; currentTime=null;
+  photos={photo1:null,photo2:null,photo3:null};
+  scanning=false;
+  document.getElementById('scan-btn').style.display='flex';
+  document.getElementById('qr-reader').style.display='none';
+  document.getElementById('result-box').className='result-box';
+  document.getElementById('result-value').textContent='—';
+  document.getElementById('result-time').textContent='—';
+  document.getElementById('manual-input').value='';
+  document.getElementById('manual-wrap').className='manual-input-wrap';
+  ['photo1','photo2','photo3'].forEach(function(k){
+    document.getElementById(k+'-input').value='';
+    document.getElementById(k+'-preview').className='preview-wrap';
+    document.getElementById(k+'-img').src='';
   });
-  document.getElementById('sec-photo1').className = 'section';
-  document.getElementById('sec-photo2').className = 'section';
-  document.getElementById('sec-photo3').className = 'section';
-  const btn = document.getElementById('upload-all-btn');
-  btn.className = 'upload-all-btn';
-  btn.disabled = false;
-  btn.textContent = '⬆ 上傳儲存';
-  document.getElementById('success-banner').className = 'success-banner';
-  document.getElementById('reset-btn').className = 'reset-btn';
-  setStatus('', '等待掃描寄件編號');
+  document.getElementById('sec-photo1').className='section';
+  document.getElementById('sec-photo2').className='section';
+  document.getElementById('sec-photo3').className='section';
+  var btn=document.getElementById('upload-all-btn');
+  btn.className='upload-all-btn'; btn.disabled=false; btn.textContent='⬆ 上傳儲存';
+  document.getElementById('success-banner').className='success-banner';
+  document.getElementById('reset-btn').className='reset-btn';
+  setStatus('','等待掃描寄件編號');
   setStep(1);
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+  window.scrollTo({top:0,behavior:'smooth'});
+});
 
 setStep(1);
 </script>
