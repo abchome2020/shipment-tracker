@@ -176,7 +176,10 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
 <script>
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzqXBFD3IKHbkJV9WKhK_Ew9qRWTME8cq00RnddDraCVi9j2EBzYmaJPH7sTJNHvrwd4w/exec';
-const STATION = '包裝站1';
+const params = new URLSearchParams(window.location.search);
+const STATION_NUM = params.get('station') || '1';
+const STATION = '包裝站' + STATION_NUM;
+document.querySelector('.header-title').textContent = '📦 包裝站 ' + STATION_NUM;
 
 let currentCode = null, currentTime = null;
 let photos = { photo1: null, photo2: null, photo3: null };
