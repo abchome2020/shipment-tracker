@@ -7,15 +7,9 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap');
 :root {
-  --bg: #f5f0eb;
-  --surface: #ffffff;
-  --border: #e0d6cc;
-  --accent: #b5956a;
-  --accent2: #f0e6d8;
-  --accent3: #8a6d4e;
-  --danger: #c0544f;
-  --text: #3a2e24;
-  --muted: #9c8878;
+  --bg: #f5f0eb; --surface: #ffffff; --border: #e0d6cc;
+  --accent: #b5956a; --accent2: #f0e6d8; --accent3: #8a6d4e;
+  --danger: #c0544f; --text: #3a2e24; --muted: #9c8878;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', sans-serif; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
@@ -30,18 +24,15 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
 .status-text { font-size: 13px; color: var(--muted); font-family: 'Space Mono', monospace; }
 .status-text.active { color: var(--accent3); }
 .status-text.error { color: var(--danger); }
-
 .steps-bar { display: flex; gap: 8px; }
 .step-pill { flex: 1; padding: 8px 4px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; text-align: center; font-size: 11px; font-family: 'Space Mono', monospace; color: var(--muted); transition: all 0.3s; }
 .step-pill.active { border-color: var(--accent); color: var(--accent3); background: var(--accent2); }
 .step-pill.done { border-color: var(--accent); color: var(--accent); background: var(--accent2); }
 .step-pill.done::before { content: '✓ '; }
-
 .section { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; opacity: 0.45; pointer-events: none; transition: opacity 0.3s; box-shadow: 0 1px 6px rgba(181,149,106,0.07); }
 .section.enabled { opacity: 1; pointer-events: all; }
 .section-label { padding: 14px 18px 10px; font-size: 11px; font-family: 'Space Mono', monospace; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid var(--border); background: #faf7f4; }
 .section-area { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
-
 .scan-btn { width: 100%; padding: 20px; background: transparent; border: 2px dashed var(--border); border-radius: 12px; color: var(--text); font-family: 'Noto Sans TC', sans-serif; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; -webkit-tap-highlight-color: transparent; transition: all 0.2s; }
 .scan-btn:active { border-color: var(--accent); background: var(--accent2); }
 .scan-icon { width: 28px; height: 28px; color: var(--accent); }
@@ -58,31 +49,24 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
 .text-input { width: 100%; padding: 14px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'Space Mono', monospace; font-size: 15px; outline: none; transition: border-color 0.2s; }
 .text-input:focus { border-color: var(--accent); }
 .text-input::placeholder { color: var(--muted); }
-.confirm-btn { padding: 14px; background: var(--accent2); border: 1px solid var(--accent); border-radius: 10px; color: var(--accent3); font-family: 'Space Mono', monospace; font-size: 13px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.confirm-btn:active { opacity: 0.7; }
-
-.camera-btn { width: 100%; padding: 22px 20px; background: var(--accent); border: none; border-radius: 12px; color: #fff; font-family: 'Noto Sans TC', sans-serif; font-size: 17px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; -webkit-tap-highlight-color: transparent; transition: all 0.15s; }
+.confirm-btn { padding: 14px; background: var(--accent2); border: 1px solid var(--accent); border-radius: 10px; color: var(--accent3); font-family: 'Space Mono', monospace; font-size: 13px; cursor: pointer; }
+.camera-btn { width: 100%; padding: 22px 20px; background: var(--accent); border: none; border-radius: 12px; color: #fff; font-family: 'Noto Sans TC', sans-serif; font-size: 17px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; -webkit-tap-highlight-color: transparent; }
 .camera-btn:active { transform: scale(0.97); background: var(--accent3); }
 .camera-btn svg { width: 26px; height: 26px; }
-
 .preview-wrap { display: none; flex-direction: column; gap: 10px; }
 .preview-wrap.show { display: flex; }
 .preview-img { width: 100%; border-radius: 10px; border: 1px solid var(--border); max-height: 200px; object-fit: cover; }
 .photo-done-hint { text-align: center; font-size: 12px; color: var(--accent3); font-family: 'Space Mono', monospace; padding: 4px 0; }
-.retake-btn { width: 100%; padding: 12px; background: transparent; border: 1px solid var(--border); border-radius: 10px; color: var(--muted); font-family: 'Noto Sans TC', sans-serif; font-size: 14px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.retake-btn:active { opacity: 0.6; }
-
-.upload-all-btn { width: 100%; padding: 20px; background: var(--accent); border: none; border-radius: 12px; color: #fff; font-family: 'Noto Sans TC', sans-serif; font-size: 18px; font-weight: 900; cursor: pointer; -webkit-tap-highlight-color: transparent; display: none; box-shadow: 0 4px 16px rgba(181,149,106,0.3); }
+.retake-btn { width: 100%; padding: 12px; background: transparent; border: 1px solid var(--border); border-radius: 10px; color: var(--muted); font-family: 'Noto Sans TC', sans-serif; font-size: 14px; cursor: pointer; }
+.upload-all-btn { width: 100%; padding: 20px; background: var(--accent); border: none; border-radius: 12px; color: #fff; font-family: 'Noto Sans TC', sans-serif; font-size: 18px; font-weight: 900; cursor: pointer; display: none; box-shadow: 0 4px 16px rgba(181,149,106,0.3); }
 .upload-all-btn.show { display: block; }
-.upload-all-btn:active { opacity: 0.85; }
-
+.upload-all-btn:disabled { opacity: 0.6; }
 .success-banner { display: none; padding: 16px 18px; background: var(--accent2); border: 1px solid var(--accent); border-radius: 12px; text-align: center; flex-direction: column; gap: 4px; }
 .success-banner.show { display: flex; }
 .success-title { font-size: 15px; font-weight: 700; color: var(--accent3); }
 .success-sub { font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; }
 .reset-btn { width: 100%; padding: 16px; background: transparent; border: 1px solid var(--border); border-radius: 12px; color: var(--muted); font-family: 'Noto Sans TC', sans-serif; font-size: 14px; cursor: pointer; display: none; }
 .reset-btn.show { display: block; }
-.reset-btn:active { opacity: 0.6; }
 .timestamp { text-align: center; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); padding-bottom: 20px; }
 </style>
 </head>
@@ -91,13 +75,11 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
   <span class="header-title">📦 包裝站</span>
   <span class="station-badge" id="clock">--:--:--</span>
 </div>
-
 <div class="main">
   <div class="status-bar">
     <div class="status-dot" id="status-dot"></div>
     <span class="status-text" id="status-text">等待掃描寄件編號</span>
   </div>
-
   <div class="steps-bar">
     <div class="step-pill" id="step1">① 掃碼</div>
     <div class="step-pill" id="step2">② 內容物</div>
@@ -176,8 +158,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
     </div>
   </div>
 
-  <button class="upload-all-btn" id="upload-all-btn" onclick="uploadAll()">⬆ 上傳儲存（開發中）</button>
-
+  <button class="upload-all-btn" id="upload-all-btn" onclick="uploadAll()">⬆ 上傳儲存</button>
   <div class="success-banner" id="success-banner">
     <div class="success-title">✓ 記錄完成</div>
     <div class="success-sub" id="success-info">—</div>
@@ -188,6 +169,9 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
 <script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzqXBFD3IKHbkJV9WKhK_Ew9qRWTME8cq00RnddDraCVi9j2EBzYmaJPH7sTJNHvrwd4w/exec';
+const STATION = '包裝站1'; // 每台手機改這裡：包裝站1 / 包裝站2 / 包裝站3 / 包裝站4
+
 let currentCode = null, currentTime = null;
 let photos = { photo1: null, photo2: null, photo3: null };
 let html5QrcodeScanner = null, scanning = false;
@@ -274,6 +258,26 @@ function confirmManual() {
 
 function triggerCamera(inputId) { document.getElementById(inputId).click(); }
 
+// 壓縮圖片（避免上傳太慢）
+function compressImage(file, maxWidth, quality) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let w = img.width, h = img.height;
+        if (w > maxWidth) { h = h * maxWidth / w; w = maxWidth; }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 function handlePhoto(event, key) {
   const file = event.target.files[0];
   if (!file) return;
@@ -331,16 +335,53 @@ function retakePhoto(key) {
   }
 }
 
-function uploadAll() {
+async function uploadAll() {
   if (!photos.photo1 || !photos.photo2 || !photos.photo3 || !currentCode) return;
-  setStatus('active', '上傳中...');
-  setTimeout(() => {
-    document.getElementById('success-banner').className = 'success-banner show';
-    document.getElementById('success-info').textContent = `${currentCode} · ${formatDateTime(currentTime)}`;
-    document.getElementById('reset-btn').className = 'reset-btn show';
-    document.getElementById('upload-all-btn').style.display = 'none';
-    setStatus('active', '記錄完成！');
-  }, 800);
+  const btn = document.getElementById('upload-all-btn');
+  btn.disabled = true;
+  btn.textContent = '上傳中，請稍候...';
+  setStatus('active', '壓縮照片中...');
+
+  try {
+    // 壓縮三張照片
+    const [p1, p2, p3] = await Promise.all([
+      compressImage(photos.photo1, 1200, 0.7),
+      compressImage(photos.photo2, 1200, 0.7),
+      compressImage(photos.photo3, 1200, 0.7),
+    ]);
+
+    setStatus('active', '上傳中...');
+
+    const payload = {
+      action: 'upload',
+      code:    currentCode,
+      time:    formatDateTime(currentTime),
+      station: STATION,
+      photo1:  p1,
+      photo2:  p2,
+      photo3:  p3,
+    };
+
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    const result = await res.json();
+
+    if (result.success) {
+      document.getElementById('success-banner').className = 'success-banner show';
+      document.getElementById('success-info').textContent = `${currentCode} · ${formatDateTime(currentTime)}`;
+      document.getElementById('reset-btn').className = 'reset-btn show';
+      btn.style.display = 'none';
+      setStatus('active', '記錄完成！');
+    } else {
+      throw new Error(result.error || '上傳失敗');
+    }
+  } catch (err) {
+    setStatus('error', '上傳失敗：' + err.message);
+    btn.disabled = false;
+    btn.textContent = '⬆ 重新上傳';
+  }
 }
 
 function resetAll() {
@@ -362,7 +403,10 @@ function resetAll() {
   document.getElementById('sec-photo1').className = 'section';
   document.getElementById('sec-photo2').className = 'section';
   document.getElementById('sec-photo3').className = 'section';
-  document.getElementById('upload-all-btn').className = 'upload-all-btn';
+  const btn = document.getElementById('upload-all-btn');
+  btn.className = 'upload-all-btn';
+  btn.disabled = false;
+  btn.textContent = '⬆ 上傳儲存';
   document.getElementById('success-banner').className = 'success-banner';
   document.getElementById('reset-btn').className = 'reset-btn';
   setStatus('', '等待掃描寄件編號');
