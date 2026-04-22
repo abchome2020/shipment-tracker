@@ -33,22 +33,6 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
 .section.enabled { opacity: 1; pointer-events: all; }
 .section-label { padding: 14px 18px 10px; font-size: 11px; font-family: 'Space Mono', monospace; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid var(--border); background: #faf7f4; }
 .section-area { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
-.scan-btn { width: 100%; padding: 20px; background: transparent; border: 2px dashed var(--border); border-radius: 12px; color: var(--text); font-family: 'Noto Sans TC', sans-serif; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; }
-.scan-icon { width: 28px; height: 28px; color: var(--accent); }
-#qr-reader { width: 100%; border-radius: 10px; overflow: hidden; display: none; }
-#qr-reader video { width: 100% !important; border-radius: 10px; }
-.result-box { background: var(--accent2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; display: none; }
-.result-box.show { display: block; }
-.result-label { font-size: 10px; font-family: 'Space Mono', monospace; color: var(--accent3); letter-spacing: 2px; margin-bottom: 6px; }
-.result-value { font-family: 'Space Mono', monospace; font-size: 16px; color: var(--text); word-break: break-all; font-weight: 700; }
-.result-time { font-size: 11px; color: var(--muted); margin-top: 4px; font-family: 'Space Mono', monospace; }
-.manual-toggle { text-align: center; font-size: 12px; color: var(--muted); cursor: pointer; text-decoration: underline; }
-.manual-input-wrap { display: none; flex-direction: column; gap: 8px; }
-.manual-input-wrap.show { display: flex; }
-.text-input { width: 100%; padding: 14px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'Space Mono', monospace; font-size: 15px; outline: none; }
-.text-input:focus { border-color: var(--accent); }
-.text-input::placeholder { color: var(--muted); }
-.confirm-btn { padding: 14px; background: var(--accent2); border: 1px solid var(--accent); border-radius: 10px; color: var(--accent3); font-family: 'Noto Sans TC', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; text-align: center; }
 .camera-btn { width: 100%; padding: 22px 20px; background: var(--accent); border: none; border-radius: 12px; color: #fff; font-family: 'Noto Sans TC', sans-serif; font-size: 17px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; }
 .camera-btn:active { background: var(--accent3); }
 .camera-btn svg { width: 26px; height: 26px; }
@@ -58,6 +42,17 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
 .preview-img { width: 100%; border-radius: 10px; border: 1px solid var(--border); max-height: 200px; object-fit: cover; }
 .photo-done-hint { text-align: center; font-size: 12px; color: var(--accent3); font-family: 'Space Mono', monospace; padding: 4px 0; }
 .retake-btn { width: 100%; padding: 12px; background: transparent; border: 1px solid var(--border); border-radius: 10px; color: var(--muted); font-family: 'Noto Sans TC', sans-serif; font-size: 14px; cursor: pointer; }
+.ai-status { font-size: 13px; font-family: 'Space Mono', monospace; color: var(--muted); padding: 8px 12px; background: var(--bg); border-radius: 8px; display: none; }
+.ai-status.show { display: block; }
+.ai-status.success { color: var(--accent3); }
+.ai-status.error { color: var(--danger); }
+.code-confirm-wrap { display: none; flex-direction: column; gap: 8px; }
+.code-confirm-wrap.show { display: flex; }
+.confirm-label { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; }
+.text-input { width: 100%; padding: 14px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'Space Mono', monospace; font-size: 15px; outline: none; }
+.text-input:focus { border-color: var(--accent); }
+.text-input::placeholder { color: var(--muted); }
+.confirm-btn { padding: 14px; background: var(--accent2); border: 1px solid var(--accent); border-radius: 10px; color: var(--accent3); font-family: 'Noto Sans TC', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; text-align: center; }
 .upload-all-btn { width: 100%; padding: 20px; background: var(--accent); border: none; border-radius: 12px; color: #fff; font-family: 'Noto Sans TC', sans-serif; font-size: 18px; font-weight: 900; cursor: pointer; display: none; box-shadow: 0 4px 16px rgba(181,149,106,0.3); }
 .upload-all-btn.show { display: block; }
 .upload-all-btn:disabled { opacity: 0.6; }
@@ -78,46 +73,44 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
 <div class="main">
   <div class="status-bar">
     <div class="status-dot" id="status-dot"></div>
-    <span class="status-text" id="status-text">等待掃描寄件編號</span>
+    <span class="status-text" id="status-text">請拍攝明細單取得交易序號</span>
   </div>
   <div class="steps-bar">
-    <div class="step-pill" id="step1">① 掃碼</div>
+    <div class="step-pill" id="step1">① 明細單</div>
     <div class="step-pill" id="step2">② 內容物</div>
     <div class="step-pill" id="step3">③ 物流單</div>
     <div class="step-pill" id="step4">④ 包裝</div>
   </div>
 
-  <!-- Step 1 -->
-  <div class="section enabled" id="sec-scan">
-    <div class="section-label">① 掃描寄件編號（明細單右上）</div>
+  <!-- Step 1: 拍明細單，AI判讀序號 -->
+  <div class="section enabled" id="sec-step1">
+    <div class="section-label">① 拍攝明細單（右上角QR code處）</div>
     <div class="section-area">
-      <button class="scan-btn" id="scan-btn" onclick="startScan()">
-        <svg class="scan-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m0 14v1M4 12h1m14 0h1m-2.636-6.364l-.707.707M7.343 16.657l-.707.707m0-9.9l.707.707M16.657 16.657l.707.707"/>
-        </svg>
-        點此掃描 QR Code
+      <button class="camera-btn" id="cam-btn1">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        拍攝明細單
       </button>
-      <div id="qr-reader"></div>
-      <div class="result-box" id="result-box">
-        <div class="result-label">交易序號</div>
-        <div class="result-value" id="result-value">—</div>
-        <div class="result-time" id="result-time">—</div>
+      <input class="photo-input-hidden" type="file" id="photo0-input" accept="image/*" capture="environment">
+      <div class="preview-wrap" id="photo0-preview">
+        <img class="preview-img" id="photo0-img" src="" alt="明細單">
+        <button class="retake-btn" id="retake0">重拍</button>
       </div>
-      <div class="manual-toggle" id="manual-toggle">手動輸入編號</div>
-      <div class="manual-input-wrap" id="manual-wrap">
-        <input class="text-input" id="manual-input" type="text"
+      <div class="ai-status" id="ai-status"></div>
+      <div class="code-confirm-wrap" id="code-confirm-wrap">
+        <div class="confirm-label">確認或修改交易序號</div>
+        <input class="text-input" id="code-confirm-input" type="text"
           placeholder="例：035200010277053"
           autocomplete="off" autocapitalize="characters" spellcheck="false">
-        <button class="confirm-btn" id="confirm-btn">確認編號</button>
+        <button class="confirm-btn" id="code-confirm-btn">確認序號，開始拍照 →</button>
       </div>
     </div>
   </div>
 
-  <!-- Step 2 -->
-  <div class="section" id="sec-photo1">
+  <!-- Step 2: 內容物 -->
+  <div class="section" id="sec-step2">
     <div class="section-label">② 拍攝內容物照片</div>
     <div class="section-area">
-      <button class="camera-btn" id="cam-btn1">
+      <button class="camera-btn" id="cam-btn2">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         拍攝內容物
       </button>
@@ -130,11 +123,11 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
     </div>
   </div>
 
-  <!-- Step 3 -->
-  <div class="section" id="sec-photo2">
+  <!-- Step 3: 物流單 -->
+  <div class="section" id="sec-step3">
     <div class="section-label">③ 拍攝物流單照片</div>
     <div class="section-area">
-      <button class="camera-btn" id="cam-btn2">
+      <button class="camera-btn" id="cam-btn3">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         拍攝物流單
       </button>
@@ -147,11 +140,11 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
     </div>
   </div>
 
-  <!-- Step 4 -->
-  <div class="section" id="sec-photo3">
+  <!-- Step 4: 包裝完成 -->
+  <div class="section" id="sec-step4">
     <div class="section-label">④ 拍攝包裝完成照片</div>
     <div class="section-area">
-      <button class="camera-btn" id="cam-btn3">
+      <button class="camera-btn" id="cam-btn4">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         拍攝包裝完成
       </button>
@@ -173,20 +166,18 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
   <div class="timestamp" id="timestamp">—</div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
 <script>
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzqXBFD3IKHbkJV9WKhK_Ew9qRWTME8cq00RnddDraCVi9j2EBzYmaJPH7sTJNHvrwd4w/exec';
+const CLAUDE_API_KEY = '在這裡填入你的API Key'; // ← 填入 sk-ant-... 開頭的 Key
 const params = new URLSearchParams(window.location.search);
 const STATION_NUM = params.get('station') || '1';
 const STATION = '包裝站' + STATION_NUM;
-// 更新 header 標題
 document.getElementById('header-title').textContent = '📦 包裝站 ' + STATION_NUM;
 
 let currentCode = null, currentTime = null;
-let photos = { photo1: null, photo2: null, photo3: null };
-let scanner = null, scanning = false;
+let photos = { photo1: null, photo2: null, photo3: null }; // 不含明細單
+let photo0File = null; // 明細單（只用於AI判讀，不上傳）
 
-// Clock
 function updateClock() {
   const now = new Date(), pad = n => String(n).padStart(2,'0');
   document.getElementById('clock').textContent = pad(now.getHours())+':'+pad(now.getMinutes())+':'+pad(now.getSeconds());
@@ -218,133 +209,226 @@ function enableSection(id) {
   document.getElementById(id).className = 'section enabled';
 }
 
-// QR Scan
-document.getElementById('scan-btn').addEventListener('click', startScan);
-function startScan() {
-  if(scanning) return;
-  scanning = true;
-  document.getElementById('scan-btn').style.display = 'none';
-  document.getElementById('qr-reader').style.display = 'block';
-  setStatus('active','掃描中...');
-  scanner = new Html5Qrcode('qr-reader');
-  scanner.start({facingMode:'environment'},{fps:30,qrbox:{width:300,height:150},aspectRatio:1.5},
-    function(text){ stopScan(); setCode(text.trim().replace(/-/g,'')); },
-    function(){}
-  ).catch(function(){
-    setStatus('error','無法開啟相機，請手動輸入');
-    scanning=false;
-    document.getElementById('scan-btn').style.display='flex';
-    document.getElementById('qr-reader').style.display='none';
-    document.getElementById('manual-wrap').className='manual-input-wrap show';
-  });
+function scrollTo(id) {
+  setTimeout(function(){ document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'}); }, 300);
 }
 
-function stopScan() {
-  if(scanner){ scanner.stop().catch(function(){}); }
-  document.getElementById('qr-reader').style.display='none';
-  scanning=false;
+// ── Step 1: 拍明細單 ──
+document.getElementById('cam-btn1').addEventListener('click', function(){
+  document.getElementById('photo0-input').click();
+});
+
+document.getElementById('photo0-input').addEventListener('change', function(e){
+  var file = e.target.files[0];
+  if(!file) return;
+  photo0File = file;
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    document.getElementById('photo0-img').src = ev.target.result;
+    document.getElementById('photo0-preview').className = 'preview-wrap show';
+    recognizeCode(file);
+  };
+  reader.readAsDataURL(file);
+});
+
+document.getElementById('retake0').addEventListener('click', function(){
+  photo0File = null;
+  document.getElementById('photo0-input').value = '';
+  document.getElementById('photo0-preview').className = 'preview-wrap';
+  document.getElementById('photo0-img').src = '';
+  document.getElementById('ai-status').className = 'ai-status';
+  document.getElementById('code-confirm-wrap').className = 'code-confirm-wrap';
+  document.getElementById('code-confirm-input').value = '';
+  currentCode = null;
+});
+
+// AI 判讀
+async function recognizeCode(file) {
+  var aiEl = document.getElementById('ai-status');
+  aiEl.className = 'ai-status show';
+  aiEl.textContent = '🔍 AI 判讀交易序號中...';
+  setStatus('active', 'AI 判讀中...');
+
+  try {
+    var base64 = await new Promise(function(resolve){
+      var reader = new FileReader();
+      reader.onload = function(e){ resolve(e.target.result.replace(/^data:image\/\w+;base64,/, '')); };
+      reader.readAsDataURL(file);
+    });
+
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': CLAUDE_API_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 100,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: base64 } },
+            { type: 'text', text: '這是一張出貨明細單。請找出右上角QR code正下方的編號，格式為數字和減號組成（例如：0352000-10277053）。只回傳這個編號本身，不要去掉減號，不要其他文字。如果找不到請回傳 NOT_FOUND。' }
+          ]
+        }]
+      })
+    });
+
+    var result = await res.json();
+    var code = result.content[0].text.trim();
+
+    if (code === 'NOT_FOUND' || code.length < 5) throw new Error('無法判讀');
+
+    // 去掉減號存入 currentCode
+    currentCode = code.replace(/-/g,'');
+    currentTime = new Date();
+
+    aiEl.className = 'ai-status show success';
+    aiEl.textContent = '✓ 判讀成功：' + code;
+    document.getElementById('code-confirm-input').value = code;
+    document.getElementById('code-confirm-wrap').className = 'code-confirm-wrap show';
+    setStatus('active', '請確認交易序號');
+
+  } catch(err) {
+    aiEl.className = 'ai-status show error';
+    aiEl.textContent = '⚠ 判讀失敗，請手動輸入';
+    document.getElementById('code-confirm-input').value = '';
+    document.getElementById('code-confirm-wrap').className = 'code-confirm-wrap show';
+    document.getElementById('code-confirm-input').focus();
+    setStatus('error', '請手動輸入交易序號');
+  }
 }
 
-// Manual input
-document.getElementById('manual-toggle').addEventListener('click', function(){
-  var w=document.getElementById('manual-wrap');
-  w.className=w.className.includes('show')?'manual-input-wrap':'manual-input-wrap show';
-});
-
-document.getElementById('confirm-btn').addEventListener('click', function(){
-  var val=document.getElementById('manual-input').value.trim().replace(/-/g,'').toUpperCase();
-  if(!val){ alert('請輸入編號'); return; }
-  stopScan();
-  document.getElementById('manual-wrap').className='manual-input-wrap';
-  setCode(val);
-});
-
-document.getElementById('manual-input').addEventListener('keydown', function(e){
-  if(e.key==='Enter') document.getElementById('confirm-btn').click();
-});
-
-function setCode(code) {
-  currentCode=code; currentTime=new Date();
-  document.getElementById('result-value').textContent=code;
-  document.getElementById('result-time').textContent='掃描時間：'+fmt(currentTime);
-  document.getElementById('result-box').className='result-box show';
-  document.getElementById('scan-btn').style.display='none';
-  enableSection('sec-photo1');
-  setStatus('active','請拍攝內容物照片');
+// 確認序號按鈕
+document.getElementById('code-confirm-btn').addEventListener('click', function(){
+  var val = document.getElementById('code-confirm-input').value.trim().replace(/-/g,'').toUpperCase();
+  if(!val){ alert('請輸入交易序號'); return; }
+  currentCode = val;
+  currentTime = new Date();
+  enableSection('sec-step2');
+  setStatus('active', '請拍攝內容物照片');
   setStep(2);
-  setTimeout(function(){ document.getElementById('sec-photo1').scrollIntoView({behavior:'smooth',block:'start'}); },300);
-}
+  scrollTo('sec-step2');
+});
 
-// Photo handlers
-function setupPhoto(btnId, inputId, previewId, imgId, retakeId, onDone) {
-  document.getElementById(btnId).addEventListener('click', function(){
-    document.getElementById(inputId).click();
-  });
-  document.getElementById(inputId).addEventListener('change', function(e){
-    var file=e.target.files[0];
-    if(!file) return;
-    photos[inputId.replace('-input','')] = file;
-    var reader=new FileReader();
-    reader.onload=function(ev){
-      document.getElementById(imgId).src=ev.target.result;
-      document.getElementById(previewId).className='preview-wrap show';
-      onDone();
-    };
-    reader.readAsDataURL(file);
-  });
-  document.getElementById(retakeId).addEventListener('click', function(){
-    photos[inputId.replace('-input','')]=null;
-    document.getElementById(inputId).value='';
-    document.getElementById(previewId).className='preview-wrap';
-    document.getElementById(imgId).src='';
-  });
-}
+document.getElementById('code-confirm-input').addEventListener('keydown', function(e){
+  if(e.key==='Enter') document.getElementById('code-confirm-btn').click();
+});
 
-setupPhoto('cam-btn1','photo1-input','photo1-preview','photo1-img','retake1', function(){
-  enableSection('sec-photo2');
-  setStatus('active','請拍攝物流單照片');
+// ── Step 2: 內容物 ──
+document.getElementById('cam-btn2').addEventListener('click', function(){
+  document.getElementById('photo1-input').click();
+});
+document.getElementById('photo1-input').addEventListener('change', function(e){
+  handlePhoto(e, 'photo1', 'photo1-preview', 'photo1-img', function(){
+    enableSection('sec-step3');
+    setStatus('active', '請拍攝物流單照片');
+    setStep(3);
+    scrollTo('sec-step3');
+  });
+});
+document.getElementById('retake1').addEventListener('click', function(){
+  retakePhoto('photo1', 'photo1-input', 'photo1-preview', 'photo1-img');
+  document.getElementById('sec-step3').className = 'section';
+  document.getElementById('sec-step4').className = 'section';
+  document.getElementById('upload-all-btn').className = 'upload-all-btn';
+  photos.photo2 = null; photos.photo3 = null;
+  ['photo2','photo3'].forEach(function(k){
+    document.getElementById(k+'-input').value='';
+    document.getElementById(k+'-preview').className='preview-wrap';
+    document.getElementById(k+'-img').src='';
+  });
+  setStep(2);
+});
+
+// ── Step 3: 物流單 ──
+document.getElementById('cam-btn3').addEventListener('click', function(){
+  document.getElementById('photo2-input').click();
+});
+document.getElementById('photo2-input').addEventListener('change', function(e){
+  handlePhoto(e, 'photo2', 'photo2-preview', 'photo2-img', function(){
+    enableSection('sec-step4');
+    setStatus('active', '請拍攝包裝完成照片');
+    setStep(4);
+    scrollTo('sec-step4');
+  });
+});
+document.getElementById('retake2').addEventListener('click', function(){
+  retakePhoto('photo2', 'photo2-input', 'photo2-preview', 'photo2-img');
+  document.getElementById('sec-step4').className = 'section';
+  document.getElementById('upload-all-btn').className = 'upload-all-btn';
+  photos.photo3 = null;
+  document.getElementById('photo3-input').value='';
+  document.getElementById('photo3-preview').className='preview-wrap';
+  document.getElementById('photo3-img').src='';
   setStep(3);
-  setTimeout(function(){ document.getElementById('sec-photo2').scrollIntoView({behavior:'smooth',block:'start'}); },300);
 });
 
-setupPhoto('cam-btn2','photo2-input','photo2-preview','photo2-img','retake2', function(){
-  enableSection('sec-photo3');
-  setStatus('active','請拍攝包裝完成照片');
+// ── Step 4: 包裝完成 ──
+document.getElementById('cam-btn4').addEventListener('click', function(){
+  document.getElementById('photo3-input').click();
+});
+document.getElementById('photo3-input').addEventListener('change', function(e){
+  handlePhoto(e, 'photo3', 'photo3-preview', 'photo3-img', function(){
+    document.getElementById('upload-all-btn').className = 'upload-all-btn show';
+    setStatus('active', '四張照片完成，請上傳');
+    scrollTo('upload-all-btn');
+  });
+});
+document.getElementById('retake3').addEventListener('click', function(){
+  retakePhoto('photo3', 'photo3-input', 'photo3-preview', 'photo3-img');
+  document.getElementById('upload-all-btn').className = 'upload-all-btn';
   setStep(4);
-  setTimeout(function(){ document.getElementById('sec-photo3').scrollIntoView({behavior:'smooth',block:'start'}); },300);
 });
 
-setupPhoto('cam-btn3','photo3-input','photo3-preview','photo3-img','retake3', function(){
-  document.getElementById('upload-all-btn').className='upload-all-btn show';
-  setStatus('active','三張照片完成，請上傳');
-  setTimeout(function(){ document.getElementById('upload-all-btn').scrollIntoView({behavior:'smooth',block:'start'}); },300);
-});
+function handlePhoto(e, key, previewId, imgId, onDone) {
+  var file = e.target.files[0];
+  if(!file) return;
+  photos[key] = file;
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    document.getElementById(imgId).src = ev.target.result;
+    document.getElementById(previewId).className = 'preview-wrap show';
+    onDone();
+  };
+  reader.readAsDataURL(file);
+}
 
-// Compress
+function retakePhoto(key, inputId, previewId, imgId) {
+  photos[key] = null;
+  document.getElementById(inputId).value = '';
+  document.getElementById(previewId).className = 'preview-wrap';
+  document.getElementById(imgId).src = '';
+}
+
+// 壓縮
 function compressImage(file, maxW, quality) {
   return new Promise(function(resolve){
-    var reader=new FileReader();
-    reader.onload=function(e){
-      var img=new Image();
-      img.onload=function(){
-        var canvas=document.createElement('canvas');
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var img = new Image();
+      img.onload = function(){
+        var canvas = document.createElement('canvas');
         var w=img.width, h=img.height;
         if(w>maxW){ h=h*maxW/w; w=maxW; }
         canvas.width=w; canvas.height=h;
         canvas.getContext('2d').drawImage(img,0,0,w,h);
         resolve(canvas.toDataURL('image/jpeg',quality));
       };
-      img.src=e.target.result;
+      img.src = e.target.result;
     };
     reader.readAsDataURL(file);
   });
 }
 
-// Upload
+// 上傳
 document.getElementById('upload-all-btn').addEventListener('click', uploadAll);
 async function uploadAll() {
   if(!photos.photo1||!photos.photo2||!photos.photo3||!currentCode) return;
-  var btn=document.getElementById('upload-all-btn');
+  var btn = document.getElementById('upload-all-btn');
   btn.disabled=true; btn.textContent='上傳中，請稍候...';
   setStatus('active','壓縮照片中...');
   try {
@@ -374,29 +458,29 @@ async function uploadAll() {
 
 // Reset
 document.getElementById('reset-btn').addEventListener('click', function(){
-  currentCode=null; currentTime=null;
+  currentCode=null; currentTime=null; photo0File=null;
   photos={photo1:null,photo2:null,photo3:null};
-  scanning=false;
-  document.getElementById('scan-btn').style.display='flex';
-  document.getElementById('qr-reader').style.display='none';
-  document.getElementById('result-box').className='result-box';
-  document.getElementById('result-value').textContent='—';
-  document.getElementById('result-time').textContent='—';
-  document.getElementById('manual-input').value='';
-  document.getElementById('manual-wrap').className='manual-input-wrap';
-  ['photo1','photo2','photo3'].forEach(function(k){
-    document.getElementById(k+'-input').value='';
-    document.getElementById(k+'-preview').className='preview-wrap';
-    document.getElementById(k+'-img').src='';
+  ['photo0','photo1','photo2','photo3'].forEach(function(k){
+    var inp=document.getElementById(k+'-input');
+    var pre=document.getElementById(k+'-preview');
+    var img=document.getElementById(k+'-img');
+    if(inp) inp.value='';
+    if(pre) pre.className='preview-wrap';
+    if(img) img.src='';
   });
-  document.getElementById('sec-photo1').className='section';
-  document.getElementById('sec-photo2').className='section';
-  document.getElementById('sec-photo3').className='section';
+  document.getElementById('ai-status').className='ai-status';
+  document.getElementById('ai-status').textContent='';
+  document.getElementById('code-confirm-wrap').className='code-confirm-wrap';
+  document.getElementById('code-confirm-input').value='';
+  document.getElementById('sec-step1').className='section enabled';
+  document.getElementById('sec-step2').className='section';
+  document.getElementById('sec-step3').className='section';
+  document.getElementById('sec-step4').className='section';
   var btn=document.getElementById('upload-all-btn');
   btn.className='upload-all-btn'; btn.disabled=false; btn.textContent='⬆ 上傳儲存';
   document.getElementById('success-banner').className='success-banner';
   document.getElementById('reset-btn').className='reset-btn';
-  setStatus('','等待掃描寄件編號');
+  setStatus('','請拍攝明細單取得交易序號');
   setStep(1);
   window.scrollTo({top:0,behavior:'smooth'});
 });
