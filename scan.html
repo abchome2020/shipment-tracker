@@ -72,7 +72,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
 </head>
 <body>
 <div class="header">
-  <span class="header-title">📦 包裝站</span>
+  <span class="header-title" id="header-title">📦 包裝站</span>
   <span class="station-badge" id="clock">--:--:--</span>
 </div>
 <div class="main">
@@ -179,7 +179,8 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzqXBFD3IKHbkJV9WKhK
 const params = new URLSearchParams(window.location.search);
 const STATION_NUM = params.get('station') || '1';
 const STATION = '包裝站' + STATION_NUM;
-document.querySelector('.header-title').textContent = '📦 包裝站 ' + STATION_NUM;
+// 更新 header 標題
+document.getElementById('header-title').textContent = '📦 包裝站 ' + STATION_NUM;
 
 let currentCode = null, currentTime = null;
 let photos = { photo1: null, photo2: null, photo3: null };
@@ -226,7 +227,7 @@ function startScan() {
   document.getElementById('qr-reader').style.display = 'block';
   setStatus('active','掃描中...');
   scanner = new Html5Qrcode('qr-reader');
-  scanner.start({facingMode:'environment'},{fps:10,qrbox:{width:250,height:120}},
+  scanner.start({facingMode:'environment'},{fps:30,qrbox:{width:300,height:150},aspectRatio:1.5},
     function(text){ stopScan(); setCode(text.trim().replace(/-/g,'')); },
     function(){}
   ).catch(function(){
