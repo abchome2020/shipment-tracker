@@ -168,7 +168,6 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
 
 <script>
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzqXBFD3IKHbkJV9WKhK_Ew9qRWTME8cq00RnddDraCVi9j2EBzYmaJPH7sTJNHvrwd4w/exec';
-const CLAUDE_API_KEY = '在這裡填入你的API Key'; // ← 填入 sk-ant-... 開頭的 Key
 const params = new URLSearchParams(window.location.search);
 const STATION_NUM = params.get('station') || '1';
 const STATION = '包裝站' + STATION_NUM;
@@ -242,7 +241,7 @@ document.getElementById('retake0').addEventListener('click', function(){
   currentCode = null;
 });
 
-// AI 判讀
+// AI 判讀（透過 Apps Script，Key 不暴露）
 async function recognizeCode(file) {
   var aiEl = document.getElementById('ai-status');
   aiEl.className = 'ai-status show';
@@ -252,45 +251,30 @@ async function recognizeCode(file) {
   try {
     var base64 = await new Promise(function(resolve){
       var reader = new FileReader();
-      reader.onload = function(e){ resolve(e.target.result.replace(/^data:image\/\w+;base64,/, '')); };
+      reader.onload = function(e){
+        resolve(e.target.result.replace(/^data:image\/\w+;base64,/, ''));
+      };
       reader.readAsDataURL(file);
     });
 
-    var res = await fetch('https://api.anthropic.com/v1/messages', {
+    var res = await fetch(SCRIPT_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': CLAUDE_API_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 100,
-        messages: [{
-          role: 'user',
-          content: [
-            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: base64 } },
-            { type: 'text', text: '這是一張出貨明細單。請找出右上角QR code正下方的編號，格式為數字和減號組成（例如：0352000-10277053）。只回傳這個編號本身，不要去掉減號，不要其他文字。如果找不到請回傳 NOT_FOUND。' }
-          ]
-        }]
-      })
+      body: JSON.stringify({ action: 'recognize', image: base64 })
     });
-
     var result = await res.json();
-    var code = result.content[0].text.trim();
 
-    if (code === 'NOT_FOUND' || code.length < 5) throw new Error('無法判讀');
+    if (result.success) {
+      currentCode = result.code.replace(/-/g,'');
+      currentTime = new Date();
+      aiEl.className = 'ai-status show success';
+      aiEl.textContent = '✓ 判讀成功：' + result.code;
+      document.getElementById('code-confirm-input').value = result.code;
+      setStatus('active', '請確認交易序號');
+    } else {
+      throw new Error(result.error || '無法判讀');
+    }
 
-    // 去掉減號存入 currentCode
-    currentCode = code.replace(/-/g,'');
-    currentTime = new Date();
-
-    aiEl.className = 'ai-status show success';
-    aiEl.textContent = '✓ 判讀成功：' + code;
-    document.getElementById('code-confirm-input').value = code;
     document.getElementById('code-confirm-wrap').className = 'code-confirm-wrap show';
-    setStatus('active', '請確認交易序號');
 
   } catch(err) {
     aiEl.className = 'ai-status show error';
